@@ -43,6 +43,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.uploadedChunks = []; // We just store ETags of all parts, not the actual buffer.
   
   // S3 Parameters and properties
+  AWS.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey, region: s3Params.region? s3Params.region : 'us-west-1'});
   this.s3Client = this.getNewS3Client();
   this.s3Params = s3Params;
   this.s3AccessKey = s3AccessKey;
@@ -89,7 +90,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
 util.inherits(StreamingS3, EventEmitter);
 
 StreamingS3.prototype.getNewS3Client = function() {
-  return (new aws.S3.client());
+  return (new aws.S3());
 }
 
 StreamingS3.prototype.begin = function() {
