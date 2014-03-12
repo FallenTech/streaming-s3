@@ -88,11 +88,11 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
 
 util.inherits(StreamingS3, EventEmitter);
 
-StreamingS3.prototype.getNewS3Client() {
-  return new aws.S3.client();
+StreamingS3.prototype.getNewS3Client = function() {
+  return (new aws.S3.client());
 }
 
-StreamingS3.prototype.begin() {
+StreamingS3.prototype.begin = function() {
   if (self.cb) return; // Ignore calls if user has provided callback.
   var self = this;
   
@@ -143,7 +143,7 @@ StreamingS3.prototype.begin() {
   
 }
 
-StreamingS3.prototype.sendToS3() {
+StreamingS3.prototype.sendToS3 = function() {
   var self = this;
   
   this.uploadChunk = function (chunk, next) {
@@ -197,7 +197,7 @@ StreamingS3.prototype.sendToS3() {
   
 }
 
-StreamingS3.prototype.finish() {
+StreamingS3.prototype.finish = function() {
   var self = this;
   
   if (this.failed) return;
@@ -249,4 +249,4 @@ StreamingS3.prototype.finish() {
   }
 }
 
-module.exports = StreamingS3Uploader;
+module.exports = StreamingS3;
