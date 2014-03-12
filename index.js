@@ -95,16 +95,6 @@ StreamingS3.prototype.getNewS3Client = function() {
 
 StreamingS3.prototype.begin = function() {
   if (this.cb) return; // Ignore calls if user has provided callback.
-  var self = this;
-  
-  this.s3Client.createMultipartUpload(this.s3Params, function (err, data) {
-    if (err) return self.emit('error', err);
-    
-    // Assert UploadId presence.
-    if (!data.UploadId) return next(new Error('AWS SDK returned invalid object! Expecting UploadId.'));
-  
-    self.uploadId = data.UploadId;
-  });
   
   this.streamErrorHandler = function (err) {
     self.emit('error', err);
@@ -139,10 +129,25 @@ StreamingS3.prototype.begin = function() {
     self.finish();
   }
   
-  this.stream.on('error', this.streamErrorHandler);
-  this.stream.on('data', this.streamDataHandler);
-  this.stream.on('end', this.streamEndHandler);
-  this.stream.resume();
+  var self = this;
+    
+  async.series({
+    createMultipartUpload: function (callback) {
+      self.s3Client.createMultipartUpload(self.s3Params, function (err, data) {
+        if (err) return self.emit('error', err);
+        
+        // Assert UploadId presence.
+        if (!data.UploadId) return callback(new Error('AWS SDK returned invalid object! Expecting UploadId.'));
+      
+        self.uploadId = data.UploadId;
+        callback();
+      });
+    }}, function (err, results) {
+      self.stream.on('error', self.streamErrorHandler);
+      self.stream.on('data', self.streamDataHandler);
+      self.stream.on('end', self.streamEndHandler);
+      self.stream.resume();
+    }); 
   
 }
 
@@ -211,17 +216,17 @@ StreamingS3.prototype.finish = function() {
     if (err) return self.emit('error', err);
     
     // Assert Parts presence.
-    if (!data.Parts) return next(new Error('AWS SDK returned invalid object! Expecting Parts.'));
+    if (!data.Parts) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting Parts.'));
     
     var totalParts = data.Parts.length;
     for (var i = 0; i < totalParts; i++) {
       var part = data.Parts[i];
       
       // Assert part ETag presence.
-      if (!part.ETag) return next(new Error('AWS SDK returned invalid object when checking parts! Expecting ETag.'));
+      if (!part.ETag) return self.emit('error', new Error('AWS SDK returned invalid object when checking parts! Expecting ETag.'));
       
       // Assert PartNumber presence.
-      if (!part.PartNumber) return next(new Error('AWS SDK returned invalid object when checking parts! Expecting PartNumber.'));
+      if (!part.PartNumber) return self.emit('error', new Error('AWS SDK returned invalid object when checking parts! Expecting PartNumber.'));
       
       if (self.uploadedChunks[part.PartNumber] != part.ETag) {
         return self.emit('error', new Error('Upload failed, ETag of one of the parts mismatched.'));
@@ -234,10 +239,11 @@ StreamingS3.prototype.finish = function() {
       if (err) return self.emit('error', err);
       
       // Assert File ETag presence.
-      if (!data.ETag) return next(new Error('AWS SDK returned invalid object! Expecting file Etag.'));
+      if (!data.ETag) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting file Etag.'));
       self.waitingTimer && clearTimeout(self.waitingTimer);
       self.waiting = false;
       self.finished = true;
+      self.cb && self.cb(null, data); // Done :D
     });
     
   });
