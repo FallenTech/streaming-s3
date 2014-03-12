@@ -1,0 +1,31 @@
+{
+  "author": {
+    "name": "Talha Asad",
+    "email": "talha@mindblaze.net",
+    "url": "http://mindblaze.net"
+  },
+  "name": "streaming-s3",
+  "description": "Streaming uploads to Amazon Web Service(AWS) S3 for nodejs.",
+  "version": "0.0.1",
+  "keywords": [
+    "aws-sdk",
+    "aws s3",
+    "aws s3 streaming",
+    "s3 streaming",
+    "streaming",
+    "s3 streaming upload",
+  ],
+  "homepage": "https://github.com/talha-asad/streaming-s3",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/talha-asad/streaming-s3.git"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "aws-sdk": "*",
+    "async": "*"
+  }
+}
