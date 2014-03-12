@@ -94,7 +94,7 @@ StreamingS3.prototype.getNewS3Client = function() {
 }
 
 StreamingS3.prototype.begin = function() {
-  if (self.cb) return; // Ignore calls if user has provided callback.
+  if (this.cb) return; // Ignore calls if user has provided callback.
   var self = this;
   
   this.s3Client.createMultipartUpload(this.s3Params, function (err, data) {
