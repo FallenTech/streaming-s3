@@ -196,7 +196,7 @@ StreamingS3.prototype.sendToS3 = function() {
   }
   
   if (this.chunks.length) {
-    async.eachLimit(this.chunks, this.uploadChunk, function (err) {
+    async.eachLimit(this.chunks, this.options.concurrentParts, this.uploadChunk, function (err) {
       if (self.failed) return;
       if (err) return self.emit('error', err);
       self.waiting = true;
