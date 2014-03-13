@@ -143,6 +143,7 @@ StreamingS3.prototype.begin = function() {
         callback();
       });
     }}, function (err, results) {
+      if (err) return self.emit('error', err);
       self.stream.on('error', self.streamErrorHandler);
       self.stream.on('data', self.streamDataHandler);
       self.stream.on('end', self.streamEndHandler);
