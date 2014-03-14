@@ -28,10 +28,16 @@ var Streaming-S3 = require('streaming-s3'),
     fs = require('fs');
 
 var fileStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY', {Bucket: 'example.streaming-s3.com', Key: 'video.mp4', ContentType: 'video/mp4'}, function (err, resp) {
+var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY',
+  {
+    Bucket: 'example.streaming-s3.com',
+    Key: 'video.mp4',
+    ContentType: 'video/mp4'
+  },  function (err, resp) {
   if (err) return console.log('Upload failed cause: ', e);
   console.log('Upload successful: ', resp);
-});
+  }
+);
 ```
 
 ### Example 2: Uploading local file without callback.
@@ -41,7 +47,14 @@ var Streaming-S3 = require('streaming-s3'),
     fs = require('fs');
 
 var fileStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY', {Bucket: 'example.streaming-s3.com', Key: 'video.mp4', ContentType: 'video/mp4'});
+var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY',
+  {
+    Bucket: 'example.streaming-s3.com',
+    Key: 'video.mp4',
+    ContentType: 'video/mp4'
+  }
+);
+  
 uploader.begin(); // important if callback not provided.
 
 uploader.on('data', function (e, bytesRead) {
