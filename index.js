@@ -105,7 +105,7 @@ StreamingS3.prototype.getNewS3Client = function() {
 }
 
 StreamingS3.prototype.begin = function() {
-  if (this.initiated) return; // Ignore calls if user has provided callback.
+  if (this.cb) return; // Ignore calls if user has provided callback because there might be another upload in progress.
   
   this.streamErrorHandler = function (err) {
     self.emit('error', err);
@@ -152,6 +152,7 @@ StreamingS3.prototype.begin = function() {
 
 StreamingS3.prototype.flushChunk = function() {
   if (!this.initiated) return;
+  else if (!this.uploadId) return;
   var newChunk;
     if (this.buffer.length > this.options.maxPartSize) {
       newChunk = this.buffer.slice(0, this.options.maxPartSize);
@@ -184,6 +185,7 @@ StreamingS3.prototype.flushChunk = function() {
 
 
 StreamingS3.prototype.sendToS3 = function() {
+  if (!this.uploadId) return;
   var self = this;
   
   this.uploadChunk = function (chunk, next) {
@@ -246,7 +248,8 @@ StreamingS3.prototype.sendToS3 = function() {
 }
 
 StreamingS3.prototype.finish = function() {
-  if (this.failed) return;
+  if (!this.uploadId) return;
+  else if (this.failed) return;
   else if (!this.uploadId) return this.emit('error', new Error('No AWS S3 Upload ID set, make sure you provide callback or call init on the object.'));
   else if (this.finished) return;
   
