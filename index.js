@@ -105,7 +105,7 @@ StreamingS3.prototype.getNewS3Client = function() {
 }
 
 StreamingS3.prototype.begin = function() {
-  if (this.cb) return; // Ignore calls if user has provided callback because there might be another upload in progress.
+  if (this.initiated) return;
   
   this.streamErrorHandler = function (err) {
     self.emit('error', err);
