@@ -98,8 +98,8 @@
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bytesRead</span><span class="p">,</span> <span class="s1">' bytes read.'</span><span class="p">);</span>
 <span class="p">});</span>
 
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'partUploaded'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">partNumber</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">partNumber</span><span class="p">,</span> <span class="s1">' part uploaded.'</span><span class="p">);</span>
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'part'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Part '</span><span class="p">,</span> <span class="nx">number</span><span class="p">,</span> <span class="s1">' uploaded.'</span><span class="p">);</span>
 <span class="p">});</span>
 
 <span class="c1">// All parts uploaded, but upload not yet acknowledged.</span>
@@ -117,7 +117,91 @@
 </pre></div>
 
 <h3>
-<a name="example-3" class="anchor" href="#example-3"><span class="octicon octicon-link"></span></a>Example 3</h3>
+<a name="example-2-uploading-remote-file-without-callback-and-options" class="anchor" href="#example-2-uploading-remote-file-without-callback-and-options"><span class="octicon octicon-link"></span></a>Example 2: Uploading remote file without callback and options</h3>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
+    <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'request'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">rStream</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'http://www.google.com'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">rStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
+    <span class="nx">Key</span><span class="o">:</span> <span class="s1">'google.html'</span><span class="p">,</span>
+    <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'text/html'</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="nx">concurrentParts</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">waitTime</span><span class="o">:</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="nx">retries</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">maxPartSize</span><span class="o">:</span> <span class="mi">10</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">begin</span><span class="p">();</span> <span class="c1">// important if callback not provided.</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">bytesRead</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bytesRead</span><span class="p">,</span> <span class="s1">' bytes read.'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'part'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Part '</span><span class="p">,</span> <span class="nx">number</span><span class="p">,</span> <span class="s1">' uploaded.'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// All parts uploaded, but upload not yet acknowledged.</span>
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'uploaded'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload stats: '</span><span class="p">,</span> <span class="nx">stats</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">resp</span><span class="p">,</span> <span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload finished: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload error: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="defaults-and-configurables" class="anchor" href="#defaults-and-configurables"><span class="octicon octicon-link"></span></a>Defaults and Configurables</h2>
+
+<ul>
+<li>
+<strong>concurrentParts</strong> (Default: 5) - Parts that are uploaded simultaneously.</li>
+<li>
+<strong>waitTime</strong> (Default: 1 min (60000 ms)) - Time to wait for verification from S3 after uploading parts.</li>
+<li>
+<strong>retries</strong> (Default: 5) - Number of times to retry uploading a part, before failing.</li>
+<li>
+<strong>maxPartSize</strong> (Default: 5 MB) - Maximum size of each part.</li>
+</ul><h2>
+<a name="history" class="anchor" href="#history"><span class="octicon octicon-link"></span></a>History</h2>
+
+<ul>
+<li>v0.1.5 (2014-03-15) -- Added upload, download time and speed statistics.</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2014 Talha Asad</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/talha-asad">talha-asad</a></p>
