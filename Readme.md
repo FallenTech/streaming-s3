@@ -68,8 +68,8 @@ uploader.on('data', function (e, bytesRead) {
   console.log(bytesRead, ' bytes read.');
 });
 
-uploader.on('partUploaded', function (e, partNumber) {
-  console.log(partNumber, ' part uploaded.');
+uploader.on('part', function (e, number) {
+  console.log('Part ', number, ' uploaded.');
 });
 
 // All parts uploaded, but upload not yet acknowledged.
@@ -114,8 +114,8 @@ uploader.on('data', function (e, bytesRead) {
   console.log(bytesRead, ' bytes read.');
 });
 
-uploader.on('partUploaded', function (e, partNumber) {
-  console.log(partNumber, ' part uploaded.');
+uploader.on('part', function (e, number) {
+  console.log('Part ', number, ' uploaded.');
 });
 
 // All parts uploaded, but upload not yet acknowledged.
