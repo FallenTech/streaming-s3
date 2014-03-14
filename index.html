@@ -31,6 +31,8 @@
         <h1>
 <a name="streaming-s3" class="anchor" href="#streaming-s3"><span class="octicon octicon-link"></span></a>Streaming-S3</h1>
 
+<p><a href="https://travis-ci.org/talha-asad/streaming-s3"><img src="https://travis-ci.org/talha-asad/streaming-s3.png?branch=master" alt="Build Status"></a></p>
+
 <p>A simple and light-weight S3 upload streaming module for NodeJS.</p>
 
 <h2>
@@ -60,10 +62,16 @@
     <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">fileStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fileStream</span><span class="p">,</span> <span class="s1">'ACCESS_KEY'</span><span class="p">,</span> <span class="s1">'SECRET_KEY'</span><span class="p">,</span> <span class="p">{</span><span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span> <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span> <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span><span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fileStream</span><span class="p">,</span> <span class="s1">'ACCESS_KEY'</span><span class="p">,</span> <span class="s1">'SECRET_KEY'</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
+    <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span>
+    <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span>
+  <span class="p">},</span>  <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload failed cause: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload successful: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
-<span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">);</span>
 </pre></div>
 
 <h3>
@@ -73,7 +81,14 @@
     <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">fileStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fileStream</span><span class="p">,</span> <span class="s1">'ACCESS_KEY'</span><span class="p">,</span> <span class="s1">'SECRET_KEY'</span><span class="p">,</span> <span class="p">{</span><span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span> <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span> <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span><span class="p">});</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fileStream</span><span class="p">,</span> <span class="s1">'ACCESS_KEY'</span><span class="p">,</span> <span class="s1">'SECRET_KEY'</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
+    <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span>
+    <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+
 <span class="nx">uploader</span><span class="p">.</span><span class="nx">begin</span><span class="p">();</span> <span class="c1">// important if callback not provided.</span>
 
 <span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">bytesRead</span><span class="p">)</span> <span class="p">{</span>
