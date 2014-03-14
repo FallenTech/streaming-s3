@@ -1,42 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Streaming-s3 : Streaming uploads to Amazon Web Service(AWS) S3 for NodeJS" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Streaming-s3 by talha-asad</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Streaming-s3</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
+    <div class="wrapper">
+      <header>
+        <h1>Streaming-s3</h1>
+        <p>Streaming uploads to Amazon Web Service(AWS) S3 for NodeJS</p>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/talha-asad/streaming-s3">View on GitHub</a>
+        <p class="view"><a href="https://github.com/talha-asad/streaming-s3">View the Project on GitHub <small>talha-asad/streaming-s3</small></a></p>
 
-          <h1 id="project_title">Streaming-s3</h1>
-          <h2 id="project_tagline">Streaming uploads to Amazon Web Service(AWS) S3 for NodeJS</h2>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/talha-asad/streaming-s3/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/talha-asad/streaming-s3/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+        <ul>
+          <li><a href="https://github.com/talha-asad/streaming-s3/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/talha-asad/streaming-s3/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/talha-asad/streaming-s3">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         <h1>
 <a name="streaming-s3" class="anchor" href="#streaming-s3"><span class="octicon octicon-link"></span></a>Streaming-S3</h1>
 
-<h1></h1>
-
-<p>A light-weight S3 upload streaming module for NodeJS.</p>
+<p>A simple and light-weight S3 upload streaming module for NodeJS.</p>
 
 <h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -48,6 +43,7 @@
 <li>Highly robust</li>
 <li>Impressively fast</li>
 <li>Good usage of streams and error handling</li>
+<li>Production ready (Used and tested on production environments, uploading gigabytes of files to S3)</li>
 </ul><h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
@@ -57,21 +53,55 @@
 <h2>
 <a name="example-usage" class="anchor" href="#example-usage"><span class="octicon octicon-link"></span></a>Example Usage</h2>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">)</span>
+<h3>
+<a name="example-1-uploading-local-file-with-callback" class="anchor" href="#example-1-uploading-local-file-with-callback"><span class="octicon octicon-link"></span></a>Example 1: Uploading local file with callback.</h3>
 
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
+    <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">fileStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fileStream</span><span class="p">,</span> <span class="s1">'ACCESS_KEY'</span><span class="p">,</span> <span class="s1">'SECRET_KEY'</span><span class="p">,</span> <span class="p">{</span><span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span> <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span> <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span><span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload failed cause: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload successful: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
+<span class="p">});</span>
 </pre></div>
-      </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Streaming-s3 maintained by <a href="https://github.com/talha-asad">talha-asad</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+<h3>
+<a name="example-2-uploading-local-file-without-callback" class="anchor" href="#example-2-uploading-local-file-without-callback"><span class="octicon octicon-link"></span></a>Example 2: Uploading local file without callback.</h3>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
+    <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">fileStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fileStream</span><span class="p">,</span> <span class="s1">'ACCESS_KEY'</span><span class="p">,</span> <span class="s1">'SECRET_KEY'</span><span class="p">,</span> <span class="p">{</span><span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span> <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span> <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span><span class="p">});</span>
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">begin</span><span class="p">();</span> <span class="c1">// important if callback not provided.</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">bytesRead</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bytesRead</span><span class="p">,</span> <span class="s1">' bytes read'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'partUploaded'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">partNumber</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">partNumber</span><span class="p">,</span> <span class="s1">' part uploaded'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'upload finished: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'uploaded error: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="example-3" class="anchor" href="#example-3"><span class="octicon octicon-link"></span></a>Example 3</h3>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/talha-asad">talha-asad</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-
+    <script src="javascripts/scale.fix.js"></script>
     
-
   </body>
 </html>
