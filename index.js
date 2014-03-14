@@ -105,7 +105,7 @@ StreamingS3.prototype.getNewS3Client = function() {
 }
 
 StreamingS3.prototype.begin = function() {
-  if (this.initiated) return;
+  if (this.initiated || this.finished) return;
   
   this.streamErrorHandler = function (err) {
     self.emit('error', err);
@@ -151,8 +151,7 @@ StreamingS3.prototype.begin = function() {
 }
 
 StreamingS3.prototype.flushChunk = function() {
-  if (!this.initiated) return;
-  else if (!this.uploadId) return;
+  if (!this.initiated || !this.uploadId) return;
   var newChunk;
     if (this.buffer.length > this.options.maxPartSize) {
       newChunk = this.buffer.slice(0, this.options.maxPartSize);
@@ -189,9 +188,7 @@ StreamingS3.prototype.sendToS3 = function() {
   var self = this;
   
   this.uploadChunk = function (chunk, next) {
-    if (self.failed) return next();
-    else if (chunk.uploading) return next();
-    else if (!chunk.number) return next();
+    if (!self.uploadId || !self.initiated || self.failed || chunk.uploading || !chunk.number) return next();
     
     chunk.uploading = true;
     chunk.client = chunk.client ? chunk.client : self.getNewS3Client();
@@ -248,10 +245,7 @@ StreamingS3.prototype.sendToS3 = function() {
 }
 
 StreamingS3.prototype.finish = function() {
-  if (!this.uploadId) return;
-  else if (this.failed) return;
-  else if (!this.uploadId) return this.emit('error', new Error('No AWS S3 Upload ID set, make sure you provide callback or call init on the object.'));
-  else if (this.finished) return;
+  if (!this.uploadId || this.failed || this.finished) return;
   
   var self = this;
   
@@ -300,6 +294,7 @@ StreamingS3.prototype.finish = function() {
       if (!data.ETag) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting file Etag.'));
       self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
       self.waitingTimer && clearTimeout(self.waitingTimer);
+      self.initiated = false;
       self.waiting = false;
       self.finished = true;
       self.cb && self.cb(null, data); // Done :D
