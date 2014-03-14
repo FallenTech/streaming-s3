@@ -11,8 +11,8 @@ function extendObj (a, b) {
  
 function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   if (typeof options == 'function') {
-    options = {};
     cb = options;
+    options = {};
   }
   
   var defaultOptions = {
