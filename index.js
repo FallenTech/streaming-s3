@@ -62,6 +62,12 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.reading = false;
   this.finished = false;
   
+  // Stats
+  this.stats = {downloadSpeed: 0, uploadSpeed: 0, downloadTime: 0, uploadTime: 0};
+  this.uploadStart = 0;
+  this.downloadStart = 0;
+  this.totalBytes = 0;
+  
   // Chunking and buffering
   this.buffer = new Buffer(0);
   this.chunks = [];
@@ -113,7 +119,9 @@ StreamingS3.prototype.begin = function() {
   
   this.streamDataHandler = function (chunk) {
     self.reading = true;
+    if (!self.downloadStart) self.downloadStart = Date.now();
     if (typeof chunk === 'string') chunk = new Buffer(chunk, 'utf-8');
+    self.totalBytes += chunk.length;
     self.buffer = Buffer.concat([self.buffer, chunk]);
     if (self.buffer.length >= self.options.maxPartSize) {
       self.flushChunk();
@@ -122,6 +130,10 @@ StreamingS3.prototype.begin = function() {
   
   this.streamEndHandler = function () {
     self.reading = false;
+    if (self.downloadStart) {
+      self.stats.downloadTime = Math.round(self.downloadStart - Date.now())/1000, 3);
+      self.stats.downloadSpeed = Math.round(self.totalBytes/(self.stats.downloadTime/1000), 2);
+    }
     self.flushChunk();
   }
   
@@ -187,6 +199,8 @@ StreamingS3.prototype.sendToS3 = function() {
   if (!this.uploadId) return;
   var self = this;
   
+  if (!this.uploadStart) this.uploadStart = Date.now();
+  
   this.uploadChunk = function (chunk, next) {
     if (!self.uploadId || !self.initiated || self.failed || chunk.uploading || !chunk.number) return next();
     
@@ -230,11 +244,17 @@ StreamingS3.prototype.sendToS3 = function() {
     
     var finishedReading = !self.reading;
     
-    async.eachLimit(this.chunks, this.options.concurrentParts, this.uploadChunk, function (err) {
+    async.parallelLimit(this.chunks, this.options.concurrentParts, this.uploadChunk, function (err) {
       if (self.failed) return;
       if (err) return self.emit('error', err);
       self.waiting = true;
       if (finishedReading == true) {
+        if (self.uploadStart) {
+          self.stats.uploadTime = Math.round((self.uploadStart - Date.now())/1000, 3);
+          self.stats.uploadSpeed = Math.round(self.totalBytes/(self.stats.uploadTime/1000), 2);
+        }
+        self.emit('uploaded', self.stats);
+        
         // Give AWS some breathing time before checking for parts.
         setTimeout(function() { self.finish(); }, 500);
       }
@@ -297,7 +317,8 @@ StreamingS3.prototype.finish = function() {
       self.initiated = false;
       self.waiting = false;
       self.finished = true;
-      self.cb && self.cb(null, data); // Done :D
+      self.emit('finished', data, self.stats);
+      self.cb && self.cb(null, data, self.stats); // Done :D
     });
     
   });

@@ -4,14 +4,18 @@
 
 A simple and light-weight S3 upload streaming module for NodeJS.
 
-## Features
-* Concurrent part uploading
-* Uses official AWS SDK
-* Simple interface
-* Highly robust
-* Impressively fast
-* Good usage of streams and error handling
+
+## Benefits & Features
+* Tons of configurable options
+* Low memory usage
+* Parallel part uploading
+* Simple interface (Asynchronous and evented)
+* Downloading and uploading statistics (U/D speed and U/D time)
+* Super fast
+* Proper usage of streams and graceful error handling
 * Production ready (Used and tested on production environments, uploading gigabytes of files to S3)
+* Uses official AWS SDK
+
 
 ## Installation
 
@@ -19,7 +23,9 @@ A simple and light-weight S3 upload streaming module for NodeJS.
 $ npm install streaming-s3
 ```
 
+
 ## Example Usage
+
 
 ### Example 1: Uploading local file with callback.
 
@@ -27,14 +33,15 @@ $ npm install streaming-s3
 var Streaming-S3 = require('streaming-s3'),
     fs = require('fs');
 
-var fileStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY',
+var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
+var uploader = new Streaming-S3(fStream, 'accessKey', 'secretKey',
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
     ContentType: 'video/mp4'
-  },  function (err, resp) {
-  if (err) return console.log('Upload failed cause: ', e);
+  },  function (err, resp, stats) {
+  if (err) return console.log('Upload error: ', e);
+  console.log('Upload stats: ', stats);
   console.log('Upload successful: ', resp);
   }
 );
@@ -46,8 +53,8 @@ var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY',
 var Streaming-S3 = require('streaming-s3'),
     fs = require('fs');
 
-var fileStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY',
+var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
+var uploader = new Streaming-S3(fStream, 'accessKey', 'secretKey',
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
@@ -58,20 +65,26 @@ var uploader = new Streaming-S3(fileStream, 'ACCESS_KEY', 'SECRET_KEY',
 uploader.begin(); // important if callback not provided.
 
 uploader.on('data', function (e, bytesRead) {
-  console.log(bytesRead, ' bytes read');
+  console.log(bytesRead, ' bytes read.');
 });
 
 uploader.on('partUploaded', function (e, partNumber) {
-  console.log(partNumber, ' part uploaded');
+  console.log(partNumber, ' part uploaded.');
 });
 
-uploader.on('finished', function (e, resp) {
-  console.log('upload finished: ', resp);
+// All parts uploaded, but upload not yet acknowledged.
+uploader.on('uploaded', function (e, stats) {
+  console.log('Upload stats: ', stats);
+});
+
+uploader.on('finished', function (e, resp, stats) {
+  console.log('Upload finished: ', resp);
 });
 
 uploader.on('error', function (e) {
-  console.log('uploaded error: ', e);
+  console.log('Upload error: ', e);
 });
 ```
+
 
 ### Example 3
