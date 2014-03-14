@@ -10,6 +10,34 @@ function extendObj (a, b) {
 }
  
 function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
+  var self = this;
+  
+  // Lets hook our error event in the start so we can easily emit errors.
+  this.on('error', function (e) {
+    if (self.failed) return;
+    self.waitingTimer && clearTimeout(self.waitingTimer);
+    self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
+    self.reading = false;
+    self.waiting = false;
+    self.failed = true;
+    
+    // Remove our event handlers if any.
+    if (self.stream) {
+      self.streamErrorHandler && self.stream.removeListener('error', self.streamErrorHandler);
+      self.streamDataHandler && self.stream.removeListener('data', self.streamDataHandler);
+      self.streamEndHandler && self.stream.removeListener('end', self.streamEndHandler);
+    }
+    
+    if (self.uploadId) {
+      var abortMultipartUploadParams = extendObj({UploadId: self.uploadId}, self.s3ObjectParams);
+      self.s3Client.abortMultipartUpload(abortMultipartUploadParams, function (err, data) {
+        if (err) self.cb && self.cb(err); // We can't do anything if aborting fails :'(
+        self.cb && self.cb(e);
+      })
+    } else self.cb && self.cb(e);
+    
+  });
+  
   if (typeof options == 'function') {
     cb = options;
     options = {};
@@ -42,45 +70,24 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.uploadedChunks = []; // We just store ETags of all parts, not the actual buffer.
   
   // S3 Parameters and properties
-  aws.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey, region: s3Params.region? s3Params.region : 'us-east-1'});
-  this.s3Client = this.getNewS3Client();
+  aws.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey});
+  this.s3ObjectParams = {
+    Bucket: s3Params.Bucket || s3Params.bucket,
+    Key: s3Params.Key || s3Params.key,
+  }
+  
+  if (!this.s3ObjectParams.Bucket || !this.s3ObjectParams.Key) {
+    this.emit('error', new Error('Bucket and Key parameters for S3 Object are required!'));
+  }
+  
   this.s3Params = s3Params;
-  this.s3AccessKey = s3AccessKey;
-  this.s3SecretKey = s3SecretKey;
+  this.s3Client = this.getNewS3Client();
   this.uploadId = null;
   this.cb = cb;
   
   // Timers
   this.waitingTimer = false;
   this.acknowledgeTimer = false;
-  
-  var self = this;
-  
-  this.on('error', function (e) {
-    if (self.failed) return;
-    self.waitingTimer && clearTimeout(self.waitingTimer);
-    self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
-    self.reading = false;
-    self.waiting = false;
-    self.failed = true;
-    
-    // Remove our event handlers if any.
-    if (self.stream) {
-      self.streamErrorHandler && self.stream.removeListener('error', self.streamErrorHandler);
-      self.streamDataHandler && self.stream.removeListener('data', self.streamDataHandler);
-      self.streamEndHandler && self.stream.removeListener('end', self.streamEndHandler);
-    }
-    
-    if (self.uploadId) {
-      var abortMultipartUploadParams = extendObj({UploadId: self.uploadId}, self.s3Params);
-      delete abortMultipartUploadParams['ACL'], delete abortMultipartUploadParams['StorageClass']; // AWS fails with these parameters.
-      self.s3Client.abortMultipartUpload(abortMultipartUploadParams, function (err, data) {
-        if (err) self.cb && self.cb(err); // We can't do anything if aborting fails :'(
-        self.cb && self.cb(e);
-      })
-    } else self.cb && self.cb(e);
-    
-  });
   
   // Pause the stream until we hook our events.
   if (stream) stream.pause();
@@ -122,7 +129,8 @@ StreamingS3.prototype.begin = function() {
     
   async.series({
     createMultipartUpload: function (callback) {
-      self.s3Client.createMultipartUpload(self.s3Params, function (err, data) {
+      var createMultipartUploadParams = extendObj(self.s3Params, self.s3ObjectParams);
+      self.s3Client.createMultipartUpload(createMultipartUploadParams, function (err, data) {
         if (err) return self.emit('error', err);
         
         // Assert UploadId presence.
@@ -192,9 +200,7 @@ StreamingS3.prototype.sendToS3 = function() {
       Body: chunk
     }
     
-    partS3Params = extendObj(partS3Params, self.s3Params);
-    delete partS3Params['ACL'], delete partS3Params['StorageClass']; // AWS fails with these parameters.
-    
+    partS3Params = extendObj(partS3Params, self.s3ObjectParams);
     chunk.client.uploadPart(partS3Params, function (err, data) {
       if (err) {
         if (err.code == 'RequestTimeout') {
@@ -246,8 +252,7 @@ StreamingS3.prototype.finish = function() {
   
   var self = this;
   
-  var listPartsParams = extendObj({UploadId: this.uploadId, MaxParts: this.totalChunks}, this.s3Params);
-  delete listPartsParams['ACL'], delete listPartsParams['StorageClass']; // AWS fails with these parameters.
+  var listPartsParams = extendObj({UploadId: this.uploadId, MaxParts: this.totalChunks}, this.s3ObjectParams);
   this.s3Client.listParts(listPartsParams, function (err, data) {
     if (err) return self.emit('error', err);
     
@@ -284,8 +289,7 @@ StreamingS3.prototype.finish = function() {
       completeMultipartUploadParams.MultipartUpload.Parts.push({ETag: self.uploadedChunks[key], PartNumber: key});
     }
     
-    var completeMultipartUploadParams = extendObj(completeMultipartUploadParams, self.s3Params);
-    delete completeMultipartUploadParams['ACL'], delete completeMultipartUploadParams['StorageClass']; // AWS fails with these parameters.
+    var completeMultipartUploadParams = extendObj(completeMultipartUploadParams, self.s3ObjectParams);
     self.s3Client.completeMultipartUpload(completeMultipartUploadParams, function (err, data) {
       if (err) return self.emit('error', err);
       
