@@ -16,10 +16,10 @@
     "streaming upload",
     "s3 streaming upload"
   ],
-  "homepage": "https://github.com/talha-asad/streaming-s3",
+  "homepage": "http://mindblaze.github.io/streaming-s3",
   "repository": {
     "type": "git",
-    "url": "git://github.com/talha-asad/streaming-s3.git"
+    "url": "git://github.com/mindblaze/streaming-s3.git"
   },
   "main": "index.js",
   "engines": {
