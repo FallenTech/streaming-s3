@@ -123,10 +123,10 @@ StreamingS3.prototype.begin = function() {
     if (typeof chunk === 'string') chunk = new Buffer(chunk, 'utf-8');
     self.totalBytes += chunk.length;
     self.buffer = Buffer.concat([self.buffer, chunk]);
+    self.emit('data', chunk.length);
     if (self.buffer.length >= self.options.maxPartSize) {
       self.flushChunk();
     }
-    self.emit('data', chunk.length);
   }
   
   this.streamEndHandler = function () {
@@ -246,7 +246,7 @@ StreamingS3.prototype.sendToS3 = function() {
     
     var finishedReading = !self.reading;
     
-    async.parallelLimit(this.chunks, this.options.concurrentParts, this.uploadChunk, function (err) {
+    async.eachLimit(this.chunks, this.options.concurrentParts, this.uploadChunk, function (err) {
       if (self.failed) return;
       if (err) return self.emit('error', err);
       self.waiting = true;
