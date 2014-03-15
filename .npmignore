@@ -1,0 +1,5 @@
+.npmignore
+.gitignore
+History.md
+test/
+examples/
