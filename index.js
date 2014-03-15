@@ -132,7 +132,7 @@ StreamingS3.prototype.begin = function() {
   this.streamEndHandler = function () {
     self.reading = false;
     if (self.downloadStart) {
-      self.stats.downloadTime = Math.round(self.downloadStart - Date.now())/1000, 3);
+      self.stats.downloadTime = Math.round((self.downloadStart - Date.now())/1000, 3);
       self.stats.downloadSpeed = Math.round(self.totalBytes/(self.stats.downloadTime/1000), 2);
     }
     self.flushChunk();
