@@ -12,6 +12,7 @@ A simple and light-weight S3 upload streaming module for NodeJS.
 * Nothing is written to disk during upload
 * Parallel part uploading
 * No need to know total size of the object
+* Implicit retry mechanism for failed part uploads
 * Tons of configurable options
 * Simple interface (Asynchronous and evented)
 * Downloading and uploading statistics (U/D speed and U/D time)
@@ -144,7 +145,7 @@ uploader.on('error', function (e) {
 
 ## History
 
-* v0.1.4 (2014-03-15) -- Added upload, download time and speed statistics.
+* v0.1.5 (2014-03-15) -- Added upload, download time and speed statistics.
 
 
 ## License
