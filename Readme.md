@@ -64,20 +64,20 @@ var uploader = new Streaming-S3(fStream, 'accessKey', 'secretKey',
   
 uploader.begin(); // important if callback not provided.
 
-uploader.on('data', function (e, bytesRead) {
+uploader.on('data', function (bytesRead) {
   console.log(bytesRead, ' bytes read.');
 });
 
-uploader.on('part', function (e, number) {
+uploader.on('part', function (number) {
   console.log('Part ', number, ' uploaded.');
 });
 
 // All parts uploaded, but upload not yet acknowledged.
-uploader.on('uploaded', function (e, stats) {
+uploader.on('uploaded', function (stats) {
   console.log('Upload stats: ', stats);
 });
 
-uploader.on('finished', function (e, resp, stats) {
+uploader.on('finished', function (resp, stats) {
   console.log('Upload finished: ', resp);
 });
 
@@ -110,20 +110,20 @@ var uploader = new Streaming-S3(rStream, 'accessKey', 'secretKey',
   
 uploader.begin(); // important if callback not provided.
 
-uploader.on('data', function (e, bytesRead) {
+uploader.on('data', function (bytesRead) {
   console.log(bytesRead, ' bytes read.');
 });
 
-uploader.on('part', function (e, number) {
+uploader.on('part', function (number) {
   console.log('Part ', number, ' uploaded.');
 });
 
 // All parts uploaded, but upload not yet acknowledged.
-uploader.on('uploaded', function (e, stats) {
+uploader.on('uploaded', function (stats) {
   console.log('Upload stats: ', stats);
 });
 
-uploader.on('finished', function (e, resp, stats) {
+uploader.on('finished', function (resp, stats) {
   console.log('Upload finished: ', resp);
 });
 

@@ -126,6 +126,7 @@ StreamingS3.prototype.begin = function() {
     if (self.buffer.length >= self.options.maxPartSize) {
       self.flushChunk();
     }
+    self.emit('data', chunk.length);
   }
   
   this.streamEndHandler = function () {
@@ -230,6 +231,7 @@ StreamingS3.prototype.sendToS3 = function() {
       if (!data.ETag) return next(new Error('AWS SDK returned invalid object when part uploaded! Expecting Etag.'));
       self.uploadedChunks[chunk.number] = data.ETag;
       chunk.finished = true;
+      self.emit('part', chunk.number);
       next();
     });
     
