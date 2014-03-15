@@ -7,12 +7,14 @@ A simple and light-weight S3 upload streaming module for NodeJS.
 
 
 ## Benefits & Features
-* Tons of configurable options
+* Super fast and super easy to use
 * Low memory usage
+* Nothing is written to disk during upload
 * Parallel part uploading
+* No need to know total size of the object
+* Tons of configurable options
 * Simple interface (Asynchronous and evented)
 * Downloading and uploading statistics (U/D speed and U/D time)
-* Super fast
 * Proper usage of streams and graceful error handling
 * Production ready (Used and tested on production environments, uploading gigabytes of files to S3)
 * Uses official AWS SDK
