@@ -1,6 +1,6 @@
 # Streaming-S3
 
-[![Build Status](https://travis-ci.org/talha-asad/streaming-s3.png?branch=master)](https://travis-ci.org/talha-asad/streaming-s3)
+[![Build Status](https://travis-ci.org/mindblaze/streaming-s3.png?branch=master)](https://travis-ci.org/mindblaze/streaming-s3)
 [![Dependency Status](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109/badge.png)](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109)
 
 A simple and light-weight S3 upload streaming module for NodeJS.
