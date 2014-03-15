@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/mindblaze/streaming-s3.png?branch=master)](https://travis-ci.org/mindblaze/streaming-s3)
 [![Dependency Status](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109/badge.png)](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109)
+[![NPM version](https://badge.fury.io/js/streaming-s3.png)](http://badge.fury.io/js/streaming-s3)
+[![NPM stats](https://nodei.co/npm/streaming-s3.png?downloads=true)](https://www.npmjs.org/package/streaming-s3)
 
 A simple and light-weight S3 upload streaming module for NodeJS.
 
