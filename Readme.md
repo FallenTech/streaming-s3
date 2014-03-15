@@ -144,7 +144,7 @@ uploader.on('error', function (e) {
 
 ## History
 
-* v0.1.5 (2014-03-15) -- Added upload, download time and speed statistics.
+* v0.1.4 (2014-03-15) -- Added upload, download time and speed statistics.
 
 
 ## License
