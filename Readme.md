@@ -156,6 +156,7 @@ uploader.on('error', function (e) {
 
 ## History
 
+* v0.1.9 (2014-03-21) -- acknowledgement logic improved.
 * v0.1.8 (2014-03-21) -- Closes #1 and lots of fixes.
 * v0.1.7 (2014-03-15) -- Initial release.
 

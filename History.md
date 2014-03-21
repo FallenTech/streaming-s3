@@ -1,5 +1,8 @@
 # History
 
+## V 0.1.9 (March 21, 2014)
+* Better acknowledgement system
+
 ## V 0.1.8 (March 21, 2014)
 * Closes #1
 * Fixed concurrency issues

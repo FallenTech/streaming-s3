@@ -268,7 +268,7 @@ StreamingS3.prototype.sendToS3 = function(recursive) {
         self.emit('uploaded', self.stats);
         
         // Give AWS some breathing time before checking for parts.
-        setTimeout(function() { self.finish(); }, 500);
+        self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 500);
       }
       
     });
@@ -290,7 +290,11 @@ StreamingS3.prototype.finish = function() {
     if (!data.Parts) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting Parts.'));
     
     var totalParts = data.Parts.length;
-    if (totalParts != data.Parts.length) return; // Wait for next interval call.
+    if (totalParts != self.totalChunks) {
+      // Keep checking for parts until AWS confirms them all.
+      self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 1000);
+      return; // Wait for next interval call.
+    }
     
     for (var i = 0; i < totalParts; i++) {
       var part = data.Parts[i];
@@ -346,8 +350,6 @@ StreamingS3.prototype.finish = function() {
     }, self.options.waitTime);
   }
   
-  // Keep checking for parts until AWS confirms them all.
-  if (!this.acknowledgeTimer) this.acknowledgeTimer = setInterval(function() { self.finish(); }, 5000);
 }
 
 module.exports = StreamingS3;
