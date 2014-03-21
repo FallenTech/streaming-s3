@@ -73,7 +73,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.chunks = [];
   this.chunkNumber = 0;
   this.totalChunks = 0;
-  this.uploadedChunks = []; // We just store ETags of all parts, not the actual buffer.
+  this.uploadedChunks = {}; // We just store ETags of all parts, not the actual buffer.
   
   // S3 Parameters and properties
   aws.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey});
@@ -132,7 +132,7 @@ StreamingS3.prototype.begin = function() {
   this.streamEndHandler = function () {
     self.reading = false;
     if (self.downloadStart) {
-      self.stats.downloadTime = Math.round((self.downloadStart - Date.now())/1000, 3);
+      self.stats.downloadTime = Math.round((Date.now() - self.downloadStart)/1000, 3);
       self.stats.downloadSpeed = Math.round(self.totalBytes/(self.stats.downloadTime/1000), 2);
     }
     self.flushChunk();
@@ -177,9 +177,10 @@ StreamingS3.prototype.flushChunk = function() {
     // Add useful properties to each chunk.
     newChunk.uploading = false;
     newChunk.finished = false;
-    newChunk.number = ++this.totalChunks;
+    newChunk.number = ++this.chunkNumber;
     newChunk.retries = 0;
     this.chunks.push(newChunk);
+    this.totalChunks++;
     
     // Edge case
     if (this.reading == false && this.buffer.length) {
@@ -187,23 +188,24 @@ StreamingS3.prototype.flushChunk = function() {
       this.buffer = null;
       newChunk.uploading = false;
       newChunk.finished = false;
-      newChunk.number = ++this.totalChunks;
+      newChunk.number = ++this.chunkNumber;
       newChunk.retries = 0;
       this.chunks.push(newChunk);
+      this.totalChunks++;
     }
     
     this.sendToS3();
 }
 
 
-StreamingS3.prototype.sendToS3 = function() {
-  if (!this.uploadId) return;
+StreamingS3.prototype.sendToS3 = function(recursive) {
+  if (!this.uploadId || this.waiting) return;
   var self = this;
   
   if (!this.uploadStart) this.uploadStart = Date.now();
   
-  this.uploadChunk = function (chunk, next) {
-    if (!self.uploadId || !self.initiated || self.failed || chunk.uploading || !chunk.number) return next();
+  function uploadChunk(chunk, next) {
+    if (!self.uploadId || !self.initiated || self.failed || chunk.uploading || chunk.finished || chunk.number < 0) return next();
     
     chunk.uploading = true;
     chunk.client = chunk.client ? chunk.client : self.getNewS3Client();
@@ -222,44 +224,53 @@ StreamingS3.prototype.sendToS3 = function() {
           else {
             chunk.uploading = false;
             chunk.retries++;
-            return self.uploadChunk(chunk, next);
+            return uploadChunk(chunk, next);
           }
-        } else return next(err);
+        } else {
+          chunk.finished = true;
+          return next(err);
+        }
+      } else {
+        // Assert ETag presence.
+        if (!data.ETag) return next(new Error('AWS SDK returned invalid object when part uploaded! Expecting Etag.'));
+        // chunk.number starts at 1, while array starts at 0.
+        self.uploadedChunks[chunk.number] = data.ETag;
+        chunk.finished = true;
+        self.emit('part', chunk.number);
+        return next();
       }
-      
-      // Assert ETag presence.
-      if (!data.ETag) return next(new Error('AWS SDK returned invalid object when part uploaded! Expecting Etag.'));
-      self.uploadedChunks[chunk.number] = data.ETag;
-      chunk.finished = true;
-      self.emit('part', chunk.number);
-      next();
     });
     
   }
   
+  // Remove finished chunks, save memory :)
+  this.chunks = this.chunks.filter(function (chunk) {
+    return chunk.finished == false;
+  });
+  
   if (this.chunks.length) {
     
-    // Remove finished chunks, save memory :)
-    this.chunks = this.chunks.filter(function (chunk) {
-      return chunk.finished == false;
-    });
-    
-    var finishedReading = !self.reading;
-    
-    async.eachLimit(this.chunks, this.options.concurrentParts, this.uploadChunk, function (err) {
+    async.eachLimit(this.chunks, this.options.concurrentParts, uploadChunk, function (err) {
       if (self.failed) return;
       if (err) return self.emit('error', err);
-      self.waiting = true;
-      if (finishedReading == true) {
+      
+      // Remove finished chunks, save memory :)
+      self.chunks = self.chunks.filter(function (chunk) {
+        return chunk.finished == false;
+      });
+      
+      if (self.chunks.length == 0 && !self.waiting && !self.reading && self.totalChunks == Object.keys(self.uploadedChunks).length) {
         if (self.uploadStart) {
-          self.stats.uploadTime = Math.round((self.uploadStart - Date.now())/1000, 3);
+          self.stats.uploadTime = Math.round((Date.now() - self.uploadStart)/1000, 3);
           self.stats.uploadSpeed = Math.round(self.totalBytes/(self.stats.uploadTime/1000), 2);
         }
+        self.waiting = true;
         self.emit('uploaded', self.stats);
         
         // Give AWS some breathing time before checking for parts.
         setTimeout(function() { self.finish(); }, 500);
       }
+      
     });
     
   }

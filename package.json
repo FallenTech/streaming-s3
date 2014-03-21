@@ -6,7 +6,7 @@
   },
   "name": "streaming-s3",
   "description": "Streaming uploads to Amazon Web Service(AWS) S3 for nodejs.",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "keywords": [
     "aws s3",
     "aws s3 streaming",

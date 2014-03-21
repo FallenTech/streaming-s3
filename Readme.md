@@ -145,9 +145,19 @@ uploader.on('error', function (e) {
 * **retries** (Default: 5) - Number of times to retry uploading a part, before failing.
 * **maxPartSize** (Default: 5 MB) - Maximum size of each part.
 
+
+## Statistics object
+
+* **downloadTime** - Download time in seconds. (Reading from stream)
+* **downloadSpeed** - Download speed in bytes/second.
+* **uploadTime** - Upload time in seconds.
+* **uploadSpeed** - Upload speed in bytes/second. (Streaming to S3)
+
+
 ## History
 
-* v0.1.7 (2014-03-15) -- Added upload, download time and speed statistics.
+* v0.1.8 (2014-03-21) -- Closes #1 and lots of fixes.
+* v0.1.7 (2014-03-15) -- Initial release.
 
 
 ## License
