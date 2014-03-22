@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.0 (March 22, 2014)
+* Updated dependencies
+
 ## V 0.1.9 (March 21, 2014)
 * Better acknowledgement system
 
