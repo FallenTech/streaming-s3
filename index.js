@@ -14,7 +14,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   
   // Lets hook our error event in the start so we can easily emit errors.
   this.on('error', function (e) {
-    if (self.failed) return;
+    if (self.failed || self.finished) return;
     self.waitingTimer && clearTimeout(self.waitingTimer);
     self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
     self.reading = false;
@@ -33,11 +33,15 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
       self.s3Client.abortMultipartUpload(abortMultipartUploadParams, function (err, data) {
         if (err) {
           self.cb && self.cb(err); // We can't do anything if aborting fails :'(
+          // prevent any further callbacks
+          self.cb = null;
           return;
         }
         self.cb && self.cb(e);
+        // prevent any further callbacks
+        self.cb = null;
         return;
-      })
+      });
     } else self.cb && self.cb(e);
     
   });
@@ -54,7 +58,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
      maxPartSize: 5*1024*1024,  // In bytes, will also consume this much buffering memory.
   }
   
-  options = extendObj(options, defaultOptions);
+  options = extendObj(defaultOptions, options);
   this.options = options;
   
   this.stream = stream;
@@ -340,6 +344,8 @@ StreamingS3.prototype.finish = function() {
       self.finished = true;
       self.emit('finished', data, self.stats);
       self.cb && self.cb(null, data, self.stats); // Done :D
+      // prevent any further callback calls.
+      self.cb = null;
     });
     
   });

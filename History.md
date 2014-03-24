@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.3 (March 24, 2014)
+* Options overwritting bug resolved.
+
 ## V 0.2.2 (March 24, 2014)
 * Added some useful keywords to the package.
 
