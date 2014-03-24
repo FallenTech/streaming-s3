@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.2 (March 24, 2014)
+* Added some useful keywords to the package.
+
 ## V 0.2.1 (March 24, 2014)
 * Fixed issue of callback being called twice in case of a failed transfer.
 

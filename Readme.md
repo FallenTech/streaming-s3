@@ -157,6 +157,7 @@ uploader.on('error', function (e) {
 
 ## History
 
+* v0.2.2 (2014-03-24) -- Added some useful keywords to the package.
 * v0.2.1 (2014-03-24) -- Prevent callback being fired twice in case of failure.
 * v0.2.0 (2014-03-22) -- Updated dependencies.
 * v0.1.9 (2014-03-21) -- acknowledgement logic improved.
