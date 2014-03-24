@@ -31,8 +31,12 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
     if (self.uploadId) {
       var abortMultipartUploadParams = extendObj({UploadId: self.uploadId}, self.s3ObjectParams);
       self.s3Client.abortMultipartUpload(abortMultipartUploadParams, function (err, data) {
-        if (err) self.cb && self.cb(err); // We can't do anything if aborting fails :'(
+        if (err) {
+          self.cb && self.cb(err); // We can't do anything if aborting fails :'(
+          return;
+        }
         self.cb && self.cb(e);
+        return;
       })
     } else self.cb && self.cb(e);
     

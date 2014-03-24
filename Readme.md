@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/mindblaze/streaming-s3.png?branch=master)](https://travis-ci.org/mindblaze/streaming-s3)
 [![Dependency Status](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109/badge.png)](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109)
 [![NPM version](https://badge.fury.io/js/streaming-s3.png)](http://badge.fury.io/js/streaming-s3)
+
 [![NPM stats](https://nodei.co/npm/streaming-s3.png?downloads=true)](https://www.npmjs.org/package/streaming-s3)
 
 A simple and light-weight S3 upload streaming module for NodeJS.
@@ -156,7 +157,8 @@ uploader.on('error', function (e) {
 
 ## History
 
-* v0.20.0 (2014-03-22) -- Updated dependencies.
+* v0.2.1 (2014-03-24) -- Prevent callback being fired twice in case of failure.
+* v0.2.0 (2014-03-22) -- Updated dependencies.
 * v0.1.9 (2014-03-21) -- acknowledgement logic improved.
 * v0.1.8 (2014-03-21) -- Closes #1 and lots of fixes.
 * v0.1.7 (2014-03-15) -- Initial release.

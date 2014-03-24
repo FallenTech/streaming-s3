@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.1 (March 24, 2014)
+* Fixed issue of callback being called twice in case of a failed transfer.
+
 ## V 0.2.0 (March 22, 2014)
 * Updated dependencies
 
