@@ -275,8 +275,7 @@ StreamingS3.prototype.sendToS3 = function(recursive) {
         self.waiting = true;
         self.emit('uploaded', self.stats);
         
-        // Give AWS some breathing time before checking for parts.
-        self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 500);
+        self.finish();
       }
       
     });
@@ -300,7 +299,7 @@ StreamingS3.prototype.finish = function() {
     var totalParts = data.Parts.length;
     if (totalParts != self.totalChunks) {
       // Keep checking for parts until AWS confirms them all.
-      self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 1000);
+      self.acknowledgeTimer = setTimeout(self.finish, 2000);
       return; // Wait for next interval call.
     }
     
@@ -331,13 +330,14 @@ StreamingS3.prototype.finish = function() {
       completeMultipartUploadParams.MultipartUpload.Parts.push({ETag: self.uploadedChunks[key], PartNumber: key});
     }
     
+    self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
+    
     var completeMultipartUploadParams = extendObj(completeMultipartUploadParams, self.s3ObjectParams);
     self.s3Client.completeMultipartUpload(completeMultipartUploadParams, function (err, data) {
       if (err) return self.emit('error', err);
       
       // Assert File ETag presence.
       if (!data.ETag) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting file Etag.'));
-      self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
       self.waitingTimer && clearTimeout(self.waitingTimer);
       self.initiated = false;
       self.waiting = false;

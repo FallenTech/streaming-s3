@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.4 (March 24, 2014)
+* Various minor improvements.
+
 ## V 0.2.3 (March 24, 2014)
 * Options overwritting bug resolved.
 
