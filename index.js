@@ -299,25 +299,11 @@ StreamingS3.prototype.finish = function() {
     var totalParts = data.Parts.length;
     if (totalParts != self.totalChunks) {
       // Keep checking for parts until AWS confirms them all.
-      self.acknowledgeTimer = setTimeout(self.finish, 2000);
+      self.acknowledgeTimer = setTimeout(self.finish, 1000);
       return; // Wait for next interval call.
     }
     
-    for (var i = 0; i < totalParts; i++) {
-      var part = data.Parts[i];
-      
-      // Assert part ETag presence.
-      if (!part.ETag) return self.emit('error', new Error('AWS SDK returned invalid object when checking parts! Expecting ETag.'));
-      
-      // Assert PartNumber presence.
-      if (!part.PartNumber) return self.emit('error', new Error('AWS SDK returned invalid object when checking parts! Expecting PartNumber.'));
-      
-      if (self.uploadedChunks[part.PartNumber] != part.ETag) {
-        return self.emit('error', new Error('Upload failed, ETag of one of the parts mismatched.'));
-      }
-    }
-    
-    // All part ETag match (Success!)
+    // S3 has all parts Lets send ETags.
     var completeMultipartUploadParams = {
       UploadId: self.uploadId,
       MultipartUpload: {
@@ -325,7 +311,7 @@ StreamingS3.prototype.finish = function() {
       }
     }
     
-    var totalUploadedChunks = self.uploadedChunks.length;
+    var totalUploadedChunks = Object.keys(self.uploadedChunks).length;
     for (var key in self.uploadedChunks) {
       completeMultipartUploadParams.MultipartUpload.Parts.push({ETag: self.uploadedChunks[key], PartNumber: key});
     }

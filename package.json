@@ -29,7 +29,7 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "aws-sdk": "2.0.0-rc12",
+    "aws-sdk": "2.0.0-rc13",
     "async": "0.2.10"
   }
 }
