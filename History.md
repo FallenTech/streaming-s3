@@ -1,6 +1,6 @@
 # History
 
-## V 0.2.5 (March 27, 2014)
+## V 0.2.6 (March 27, 2014)
 * Various small improvements.
 
 ## V 0.2.4 (March 26, 2014)
