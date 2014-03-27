@@ -157,7 +157,7 @@ uploader.on('error', function (e) {
 
 ## History
 
-* v0.2.5 (2014-03-26) -- Dependencies updated.
+* v0.2.5 (2014-03-27) -- Various minor improvements.
 * v0.2.4 (2014-03-26) -- Various minor improvements.
 * v0.2.3 (2014-03-24) -- Options overwriting bug resolved.
 * v0.2.2 (2014-03-24) -- Added some useful keywords to the package.
