@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.7 (March 27, 2014)
+* Critical interval issues addressed.
+
 ## V 0.2.6 (March 27, 2014)
 * Various small improvements.
 

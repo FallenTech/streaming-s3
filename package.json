@@ -5,8 +5,8 @@
     "url": "http://mindblaze.net"
   },
   "name": "streaming-s3",
-  "description": "Streaming uploads to Amazon Web Service(AWS) S3 for nodejs.",
-  "version": "0.2.6",
+  "description": "Streaming uploads to Amazon Web Service (AWS) S3 for NodeJS",
+  "version": "0.2.7",
   "keywords": [
     "aws s3",
     "aws s3 streaming",

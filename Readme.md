@@ -157,6 +157,7 @@ uploader.on('error', function (e) {
 
 ## History
 
+* v0.2.7 (2014-03-27) -- Critical interval issues addressed.
 * v0.2.6 (2014-03-27) -- Various minor improvements.
 * v0.2.4 (2014-03-26) -- Various minor improvements.
 * v0.2.3 (2014-03-24) -- Options overwriting bug resolved.

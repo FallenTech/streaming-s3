@@ -16,7 +16,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.on('error', function (e) {
     if (self.failed || self.finished) return;
     self.waitingTimer && clearTimeout(self.waitingTimer);
-    self.acknowledgeTimer && clearInterval(self.acknowledgeTimer);
+    self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
     self.reading = false;
     self.waiting = false;
     self.failed = true;
@@ -278,7 +278,7 @@ StreamingS3.prototype.sendToS3 = function() {
         self.waiting = true;
         
         // Give S3 some breating time, before we check if the upload succeeded
-        self.acknowledgeTimer = setInterval(self.finish, 500);
+        self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 500);
       }
       
     });
@@ -289,15 +289,19 @@ StreamingS3.prototype.sendToS3 = function() {
 
 StreamingS3.prototype.finish = function() {
   if (!this.uploadId || this.failed || this.finished) {
-    this.acknowledgeTimer && clearInterval(this.acknowledgeTimer);
+    this.acknowledgeTimer && clearTimeout(this.acknowledgeTimer);
     return;
   }
+  
+  this.acknowledgeTimer && clearTimeout(this.acknowledgeTimer);
   
   var self = this;
   
   var listPartsParams = extendObj({UploadId: this.uploadId, MaxParts: this.totalChunks}, this.s3ObjectParams);
   this.s3Client.listParts(listPartsParams, function (err, data) {
     if (err) return self.emit('error', err);
+    
+    if (!self.acknowledgeTimer) self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 1000);
     
     // Assert Parts presence.
     if (!data.Parts) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting Parts.'));
@@ -321,7 +325,7 @@ StreamingS3.prototype.finish = function() {
       // Assert File ETag presence.
       if (!data.ETag) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting file Etag.'));
       self.waitingTimer && clearTimeout(self.waitingTimer);
-      self.acknowledgeTimer && clearInterval(self.acknowledgeTimer);
+      self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
       self.initiated = false;
       self.waiting = false;
       self.finished = true;
@@ -333,8 +337,6 @@ StreamingS3.prototype.finish = function() {
     
   });
   
-  
-  if (!self.acknowledgeTimer) self.acknowledgeTimer = setInterval(self.finish, 1000);
     
   // Make sure we don't keep checking for parts forever.
   if (!this.waitingTimer && this.options.waitTime) {
