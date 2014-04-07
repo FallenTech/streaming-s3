@@ -73,7 +73,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.finished = false;
   
   // Stats
-  this.stats = {downloadSpeed: 0, uploadSpeed: 0, downloadTime: 0, uploadTime: 0};
+  this.stats = {downloadSpeed: 0, uploadSpeed: 0, downloadTime: 0, uploadTime: 0, size: 0};
   this.uploadStart = 0;
   this.downloadStart = 0;
   this.totalBytes = 0;
@@ -274,6 +274,7 @@ StreamingS3.prototype.sendToS3 = function() {
           self.stats.uploadTime = Math.round((Date.now() - self.uploadStart)/1000, 3);
           self.stats.uploadSpeed = Math.round(self.totalBytes/(self.stats.uploadTime/1000), 2);
         }
+        self.stats.size = self.totalBytes;
         self.emit('uploaded', self.stats);
         self.waiting = true;
         

@@ -1,5 +1,8 @@
 # History
 
+## V 0.2.8 (April 07, 2014)
+* Added file size in stats object.
+
 ## V 0.2.7 (March 27, 2014)
 * Critical interval issues addressed.
 

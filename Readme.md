@@ -153,10 +153,12 @@ uploader.on('error', function (e) {
 * **downloadSpeed** - Download speed in bytes/second.
 * **uploadTime** - Upload time in seconds.
 * **uploadSpeed** - Upload speed in bytes/second. (Streaming to S3)
+* **size** - total bytes sent to s3.
 
 
 ## History
 
+* v0.2.8 (2014-04-07) -- added size property to stats object.
 * v0.2.7 (2014-03-27) -- Critical interval issues addressed.
 * v0.2.6 (2014-03-27) -- Various minor improvements.
 * v0.2.4 (2014-03-26) -- Various minor improvements.
