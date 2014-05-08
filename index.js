@@ -57,6 +57,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
      concurrentParts: 5,        // Concurrent parts that will be uploaded to s3 (if read stream is fast enough)
      waitTime: 60000,           // In seconds (Only applies once all parts are uploaded, used for acknowledgement), 0 = Unlimited
      retries: 5,                // Number of times to retry a part.
+     sdkRetries: 6,             // Passed onto the underlying aws-sdk.
      maxPartSize: 5*1024*1024,  // In bytes, will also consume this much buffering memory.
   }
   
@@ -86,7 +87,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.uploadedChunks = {}; // We just store ETags of all parts, not the actual buffer.
   
   // S3 Parameters and properties
-  aws.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey});
+  aws.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey, maxRetries: options.sdkRetries});
   this.s3ObjectParams = {
     Bucket: s3Params.Bucket || s3Params.bucket,
     Key: s3Params.Key || s3Params.key,
