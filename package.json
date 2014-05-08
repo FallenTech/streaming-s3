@@ -6,7 +6,7 @@
   },
   "name": "streaming-s3",
   "description": "Streaming uploads to Amazon Web Service (AWS) S3 for NodeJS",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "keywords": [
     "aws s3",
     "aws s3 streaming",
@@ -29,7 +29,7 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "aws-sdk": "2.0.0-rc.15",
+    "aws-sdk": "1.18.0",
     "async": "0.8.0"
   }
 }
