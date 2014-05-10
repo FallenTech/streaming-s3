@@ -1,5 +1,11 @@
 # History
 
+## V 0.3.0 (May 08, 2014)
+* Downgraded AWS SDK to stable version (1.18)
+
+## V 0.2.9 (May 07, 2014)
+* some minor improvements.
+
 ## V 0.2.8 (April 07, 2014)
 * Added file size in stats object.
 
