@@ -157,6 +157,7 @@ uploader.on('error', function (e) {
 
 
 ## History
+* v0.3.1.1 (2014-06-01) -- Updated dependencies.
 * v0.3.1 (2014-06-01) -- Fixed stats object.
 * v0.3.0 (2014-05-08) -- Downgraded AWS SDK to stable version (1.18)
 * v0.2.9 (2014-05-07) -- some minor improvements.
