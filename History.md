@@ -1,5 +1,8 @@
 # History
 
+## V 0.3.1 (June 01, 2014)
+* Fixed stats.
+
 ## V 0.3.0 (May 08, 2014)
 * Downgraded AWS SDK to stable version (1.18)
 

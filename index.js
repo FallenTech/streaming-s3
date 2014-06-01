@@ -124,6 +124,8 @@ StreamingS3.prototype.getNewS3Client = function() {
 StreamingS3.prototype.begin = function() {
   if (this.initiated || this.finished) return;
   
+  var self = this;
+  
   this.streamErrorHandler = function (err) {
     self.emit('error', err);
   }
@@ -148,8 +150,6 @@ StreamingS3.prototype.begin = function() {
     }
     self.flushChunk();
   }
-  
-  var self = this;
     
   async.series({
     createMultipartUpload: function (callback) {
@@ -262,7 +262,6 @@ StreamingS3.prototype.sendToS3 = function() {
   if (this.chunks.length) {
     
     async.eachLimit(this.chunks, this.options.concurrentParts, uploadChunk, function (err) {
-      if (self.failed) return;
       if (err) return self.emit('error', err);
       
       // Remove finished chunks, save memory :)
