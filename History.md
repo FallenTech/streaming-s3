@@ -1,6 +1,6 @@
 # History
 
-## V 0.3.1.1 (June 01, 2014)
+## V 0.3.1-1 (June 01, 2014)
 * Updated dependencies.
 
 ## V 0.3.1 (June 01, 2014)
