@@ -1,5 +1,8 @@
 # History
 
+## V 0.3.2 (June 09, 2014)
+* Fixed Readme and version bump, to remove confusion.
+
 ## V 0.3.1-1 (June 01, 2014)
 * Updated dependencies.
 

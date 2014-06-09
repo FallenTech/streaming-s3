@@ -94,7 +94,7 @@ uploader.on('error', function (e) {
 ```
 
 
-### Example 2: Uploading remote file without callback and options
+### Example 3: Uploading remote file without callback and options
 
 ```js
 var Streaming-S3 = require('streaming-s3'),
@@ -157,6 +157,8 @@ uploader.on('error', function (e) {
 
 
 ## History
+
+* v0.3.2 (2014-06-01) -- Fixed Readme and version bump, to remove confusion.
 * v0.3.1-1 (2014-06-01) -- Updated dependencies.
 * v0.3.1 (2014-06-01) -- Fixed stats object.
 * v0.3.0 (2014-05-08) -- Downgraded AWS SDK to stable version (1.18)
