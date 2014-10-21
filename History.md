@@ -1,5 +1,8 @@
 # History
 
+## v 0.3.4 (October 10, 2014)
+* Fixed dependency badge.
+
 ## v 0.3.3 (October 10, 2014)
 * Upgraded AWS SDK to new stable version (2.0.21)
 * Fixed Readme Examples.

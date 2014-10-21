@@ -1,8 +1,8 @@
 # Streaming-S3
 
 [![Build Status](https://travis-ci.org/mindblaze/streaming-s3.png?branch=master)](https://travis-ci.org/mindblaze/streaming-s3)
-[![Dependency Status](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109/badge.png)](https://www.versioneye.com/user/projects/5323a411ec13758e7d000109)
-[![NPM version](https://badge.fury.io/js/streaming-s3.png)](http://badge.fury.io/js/streaming-s3)
+[![Dependency Status](https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005/badge.svg)](https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005)
+[![NPM version](https://badge.fury.io/js/streaming-s3.svg)](http://badge.fury.io/js/streaming-s3)
 
 [![NPM stats](https://nodei.co/npm/streaming-s3.png?downloads=true)](https://www.npmjs.org/package/streaming-s3)
 
@@ -158,7 +158,8 @@ uploader.on('error', function (e) {
 
 ## History
 
-* v0.3.3 (2014-10-21) -- Upgraded AWS SDK to new stable version (2.0.21) and fixed Readme Examples.
+* v0.3.4 (2014-10-21) -- Fixed dependencies badge.
+* v0.3.3 (2014-10-21) -- Upgraded AWS SDK to latest stable version (2.0.21).
 * v0.3.2 (2014-06-01) -- Fixed Readme and version bump, to remove confusion.
 * v0.3.1-1 (2014-06-01) -- Updated dependencies.
 * v0.3.1 (2014-06-01) -- Fixed stats object.
