@@ -158,6 +158,7 @@ uploader.on('error', function (e) {
 
 ## History
 
+* v0.3.3 (2014-10-21) -- Upgraded AWS SDK to new stable version (2.0.21) and fixed Readme Examples.
 * v0.3.2 (2014-06-01) -- Fixed Readme and version bump, to remove confusion.
 * v0.3.1-1 (2014-06-01) -- Updated dependencies.
 * v0.3.1 (2014-06-01) -- Fixed stats object.

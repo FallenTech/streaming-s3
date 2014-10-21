@@ -1,5 +1,9 @@
 # History
 
+## v 0.3.3 (October 10, 2014)
+* Upgraded AWS SDK to new stable version (2.0.21)
+* Fixed Readme Examples.
+
 ## V 0.3.2 (June 09, 2014)
 * Fixed Readme and version bump, to remove confusion.
 
