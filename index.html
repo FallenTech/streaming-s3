@@ -55,7 +55,9 @@
 <li>Proper usage of streams and graceful error handling</li>
 <li>Production ready (Used and tested on production environments, uploading gigabytes of files to S3)</li>
 <li>Uses official AWS SDK</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <pre><code>$ npm install streaming-s3
@@ -67,11 +69,11 @@
 <h3>
 <a name="example-1-uploading-local-file-with-callback" class="anchor" href="#example-1-uploading-local-file-with-callback"><span class="octicon octicon-link"></span></a>Example 1: Uploading local file with callback.</h3>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">streamingS3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
     <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">fStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">streamingS3</span><span class="p">(</span><span class="nx">fStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
   <span class="p">{</span>
     <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
     <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span>
@@ -87,11 +89,11 @@
 <h3>
 <a name="example-2-uploading-local-file-without-callback" class="anchor" href="#example-2-uploading-local-file-without-callback"><span class="octicon octicon-link"></span></a>Example 2: Uploading local file without callback.</h3>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">streamingS3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
     <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">fStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">fStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">streamingS3</span><span class="p">(</span><span class="nx">fStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
   <span class="p">{</span>
     <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
     <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span>
@@ -126,11 +128,11 @@
 <h3>
 <a name="example-3-uploading-remote-file-without-callback-and-options" class="anchor" href="#example-3-uploading-remote-file-without-callback-and-options"><span class="octicon octicon-link"></span></a>Example 3: Uploading remote file without callback and options</h3>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">streamingS3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
     <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'request'</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">rStream</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'http://www.google.com'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Streaming</span><span class="o">-</span><span class="nx">S3</span><span class="p">(</span><span class="nx">rStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
+<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">streamingS3</span><span class="p">(</span><span class="nx">rStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
   <span class="p">{</span>
     <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
     <span class="nx">Key</span><span class="o">:</span> <span class="s1">'google.html'</span><span class="p">,</span>
@@ -180,7 +182,9 @@
 <strong>retries</strong> (Default: 5) - Number of times to retry uploading a part, before failing.</li>
 <li>
 <strong>maxPartSize</strong> (Default: 5 MB) - Maximum size of each part.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="statistics-object" class="anchor" href="#statistics-object"><span class="octicon octicon-link"></span></a>Statistics object</h2>
 
 <ul>
@@ -194,10 +198,13 @@
 <strong>uploadSpeed</strong> - Upload speed in bytes/second. (Streaming to S3)</li>
 <li>
 <strong>size</strong> - Total bytes uploaded.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="history" class="anchor" href="#history"><span class="octicon octicon-link"></span></a>History</h2>
 
 <ul>
+<li>v0.3.3 (2014-10-21) -- Upgraded AWS SDK to new stable version (2.0.21) and fixed Readme Examples.</li>
 <li>v0.3.2 (2014-06-01) -- Fixed Readme and version bump, to remove confusion.</li>
 <li>v0.3.1-1 (2014-06-01) -- Updated dependencies.</li>
 <li>v0.3.1 (2014-06-01) -- Fixed stats object.</li>
@@ -214,7 +221,9 @@
 <li>v0.1.9 (2014-03-21) -- acknowledgement logic improved.</li>
 <li>v0.1.8 (2014-03-21) -- Closes #1 and lots of fixes.</li>
 <li>v0.1.7 (2014-03-15) -- Initial release.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>The MIT License (MIT)</p>
