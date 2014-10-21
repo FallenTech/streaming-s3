@@ -37,11 +37,11 @@ $ npm install streaming-s3
 ### Example 1: Uploading local file with callback.
 
 ```js
-var Streaming-S3 = require('streaming-s3'),
+var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
 var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new Streaming-S3(fStream, 'accessKey', 'secretKey',
+var uploader = new streamingS3(fStream, 'accessKey', 'secretKey',
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
@@ -57,11 +57,11 @@ var uploader = new Streaming-S3(fStream, 'accessKey', 'secretKey',
 ### Example 2: Uploading local file without callback.
 
 ```js
-var Streaming-S3 = require('streaming-s3'),
+var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
 var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new Streaming-S3(fStream, 'accessKey', 'secretKey',
+var uploader = new streamingS3(fStream, 'accessKey', 'secretKey',
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
@@ -97,11 +97,11 @@ uploader.on('error', function (e) {
 ### Example 3: Uploading remote file without callback and options
 
 ```js
-var Streaming-S3 = require('streaming-s3'),
+var streamingS3 = require('streaming-s3'),
     request = require('request');
 
 var rStream = request.get('http://www.google.com');
-var uploader = new Streaming-S3(rStream, 'accessKey', 'secretKey',
+var uploader = new streamingS3(rStream, 'accessKey', 'secretKey',
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'google.html',
