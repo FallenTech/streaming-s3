@@ -5,10 +5,11 @@ var EventEmitter = require('events').EventEmitter,
 
 
 function extendObj (a, b) {
-  for (var x in b) a[x] = b[x]
+  for (var x in b) a[x] = b[x];
   return a;
 }
  
+// New (>= 0.4) function StreamingS3(stream, awsConfig, s3Params, options, cb)
 function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   var self = this;
   
@@ -48,6 +49,18 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
     }
   });
   
+  
+  var awsConfigObject = {accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey};
+  
+  if (typeof s3AccessKey == 'object') {
+    cb = options;
+    options = s3Params;
+    s3Params = s3SecretKey;
+    awsConfigObject = s3AccessKey;
+    s3AccessKey = awsConfigObject.accessKeyId;
+    s3SecretKey = awsConfigObject.secretAccessKey;
+  }
+  
   if (typeof options == 'function') {
     cb = options;
     options = {};
@@ -58,11 +71,24 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
      waitTime: 60000,           // In seconds (Only applies once all parts are uploaded, used for acknowledgement), 0 = Unlimited
      retries: 5,                // Number of times to retry a part.
      sdkRetries: 6,             // Passed onto the underlying aws-sdk.
-     maxPartSize: 5*1024*1024,  // In bytes, will also consume this much buffering memory.
-  }
+     maxPartSize: 5*1024*1024  // In bytes, will also consume this much buffering memory.
+  };
   
   options = extendObj(defaultOptions, options);
   this.options = options;
+  
+  if (options.sdkRetries) awsConfigObject.maxRetries = options.sdkRetries;
+  
+  // S3 Parameters and properties
+  aws.config.update(awsConfigObject);
+  this.s3ObjectParams = {
+    Bucket: s3Params.Bucket || s3Params.bucket,
+    Key: s3Params.Key || s3Params.key
+  };
+  
+  if (!this.s3ObjectParams.Bucket || !this.s3ObjectParams.Key) {
+    return this.emit('error', new Error('Bucket and Key parameters for S3 Object are required!'));
+  }
   
   this.stream = stream;
   
@@ -86,16 +112,6 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.totalChunks = 0;
   this.uploadedChunks = {}; // We just store ETags of all parts, not the actual buffer.
   
-  // S3 Parameters and properties
-  aws.config.update({accessKeyId: s3AccessKey, secretAccessKey: s3SecretKey, maxRetries: options.sdkRetries});
-  this.s3ObjectParams = {
-    Bucket: s3Params.Bucket || s3Params.bucket,
-    Key: s3Params.Key || s3Params.key,
-  }
-  
-  if (!this.s3ObjectParams.Bucket || !this.s3ObjectParams.Key) {
-    this.emit('error', new Error('Bucket and Key parameters for S3 Object are required!'));
-  }
   
   this.s3Params = s3Params;
   this.s3Client = this.getNewS3Client();
@@ -119,7 +135,7 @@ util.inherits(StreamingS3, EventEmitter);
 
 StreamingS3.prototype.getNewS3Client = function() {
   return (new aws.S3());
-}
+};
 
 StreamingS3.prototype.begin = function() {
   if (this.initiated || this.finished) return;
@@ -128,7 +144,7 @@ StreamingS3.prototype.begin = function() {
   
   this.streamErrorHandler = function (err) {
     self.emit('error', err);
-  }
+  };
   
   this.streamDataHandler = function (chunk) {
     self.reading = true;
@@ -140,7 +156,7 @@ StreamingS3.prototype.begin = function() {
     if (self.buffer.length >= self.options.maxPartSize) {
       self.flushChunk();
     }
-  }
+  };
   
   this.streamEndHandler = function () {
     self.reading = false;
@@ -149,7 +165,7 @@ StreamingS3.prototype.begin = function() {
       self.stats.downloadSpeed = Math.round(self.totalBytes/(self.stats.downloadTime/1000), 2);
     }
     self.flushChunk();
-  }
+  };
     
   async.series({
     createMultipartUpload: function (callback) {
@@ -172,7 +188,7 @@ StreamingS3.prototype.begin = function() {
       self.stream.resume();
     }); 
   
-}
+};
 
 StreamingS3.prototype.flushChunk = function() {
   if (!this.initiated || !this.uploadId) return;
@@ -194,7 +210,7 @@ StreamingS3.prototype.flushChunk = function() {
     this.totalChunks++;
     
     // Edge case
-    if (this.reading == false && this.buffer.length) {
+    if (this.reading === false && this.buffer.length) {
       newChunk = this.buffer.slice(0, this.buffer.length);
       this.buffer = null;
       newChunk.uploading = false;
@@ -206,7 +222,7 @@ StreamingS3.prototype.flushChunk = function() {
     }
     
     this.sendToS3();
-}
+};
 
 
 StreamingS3.prototype.sendToS3 = function() {
@@ -225,7 +241,7 @@ StreamingS3.prototype.sendToS3 = function() {
       UploadId: self.uploadId,
       PartNumber: chunk.number,
       Body: chunk
-    }
+    };
     
     partS3Params = extendObj(partS3Params, self.s3ObjectParams);
     chunk.client.uploadPart(partS3Params, function (err, data) {
@@ -256,7 +272,7 @@ StreamingS3.prototype.sendToS3 = function() {
   
   // Remove finished chunks, save memory :)
   this.chunks = this.chunks.filter(function (chunk) {
-    return chunk.finished == false;
+    return chunk.finished === false;
   });
   
   if (this.chunks.length) {
@@ -266,10 +282,10 @@ StreamingS3.prototype.sendToS3 = function() {
       
       // Remove finished chunks, save memory :)
       self.chunks = self.chunks.filter(function (chunk) {
-        return chunk.finished == false;
+        return chunk.finished === false;
       });
       
-      if (self.chunks.length == 0 && !self.waiting && !self.reading && self.totalChunks == Object.keys(self.uploadedChunks).length) {
+      if (self.chunks.length === 0 && !self.waiting && !self.reading && self.totalChunks == Object.keys(self.uploadedChunks).length) {
         if (self.uploadStart) {
           self.stats.uploadTime = Math.round((Date.now() - self.uploadStart)/1000, 3);
           self.stats.uploadSpeed = Math.round(self.totalBytes/(self.stats.uploadTime/1000), 2);
@@ -286,7 +302,7 @@ StreamingS3.prototype.sendToS3 = function() {
     
   }
   
-}
+};
 
 StreamingS3.prototype.finish = function() {
   if (!this.uploadId || this.failed || this.finished) {
@@ -314,13 +330,13 @@ StreamingS3.prototype.finish = function() {
       MultipartUpload: {
         Parts: []
       }
-    }    
+    };
     
     for (var key in self.uploadedChunks) {
       completeMultipartUploadParams.MultipartUpload.Parts.push({ETag: self.uploadedChunks[key], PartNumber: key});
     }
     
-    var completeMultipartUploadParams = extendObj(completeMultipartUploadParams, self.s3ObjectParams);
+    completeMultipartUploadParams = extendObj(completeMultipartUploadParams, self.s3ObjectParams);
     self.s3Client.completeMultipartUpload(completeMultipartUploadParams, function (err, data) {
       if (err) return self.emit('error', err);
       // Assert File ETag presence.
@@ -343,11 +359,11 @@ StreamingS3.prototype.finish = function() {
   if (!this.waitingTimer && this.options.waitTime) {
     this.waitingTimer = setTimeout(function () {
       if (self.waiting && !self.finished) {
-        self.emit('error', new Error('AWS did not acknowledge all parts within specified timeout of ' + (self.options.waitTime/1000) + ' seconds.'));
+        return self.emit('error', new Error('AWS did not acknowledge all parts within specified timeout of ' + (self.options.waitTime/1000) + ' seconds.'));
       }
     }, self.options.waitTime);
   }
   
-}
+};
 
 module.exports = StreamingS3;

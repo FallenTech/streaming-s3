@@ -31,6 +31,20 @@ $ npm install streaming-s3
 ```
 
 
+## Version 0.4 and 0.3.x Changes
+Starting from version 0.4 onwards you can pass in an object that is used to configure the underlying the aws-sdk. This can contain **region** and other parameters.
+
+* Old Constructor (Still supported)
+```js
+var uploader = new streamingS3(fStream, 'accessKey', 'secretKey', ...
+```
+
+* New Constructor
+```js
+var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'}, ...
+```
+
+
 ## Example Usage
 
 
@@ -41,7 +55,7 @@ var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
 var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new streamingS3(fStream, 'accessKey', 'secretKey',
+var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
@@ -61,7 +75,7 @@ var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
 var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
-var uploader = new streamingS3(fStream, 'accessKey', 'secretKey',
+var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
@@ -101,7 +115,7 @@ var streamingS3 = require('streaming-s3'),
     request = require('request');
 
 var rStream = request.get('http://www.google.com');
-var uploader = new streamingS3(rStream, 'accessKey', 'secretKey',
+var uploader = new streamingS3(rStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'google.html',
@@ -158,9 +172,10 @@ uploader.on('error', function (e) {
 
 ## History
 
-* v0.3.4 (2014-10-21) -- Fixed dependencies badge.
-* v0.3.3 (2014-10-21) -- Upgraded AWS SDK to latest stable version (2.0.21).
-* v0.3.2 (2014-06-01) -- Fixed Readme and version bump, to remove confusion.
+* v0.4.0 (2014-11-28) -- New constructor signature, added option to specify region and updated dependencies.
+* v0.3.4 (2014-10-10) -- Fixed dependencies badge.
+* v0.3.3 (2014-10-10) -- Upgraded AWS SDK to latest stable version (2.0.21).
+* v0.3.2 (2014-06-09) -- Fixed Readme and version bump, to remove confusion.
 * v0.3.1-1 (2014-06-01) -- Updated dependencies.
 * v0.3.1 (2014-06-01) -- Fixed stats object.
 * v0.3.0 (2014-05-08) -- Downgraded AWS SDK to stable version (1.18)

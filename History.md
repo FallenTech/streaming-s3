@@ -1,5 +1,10 @@
 # History
 
+## v 0.4.0 (November 28, 2014)
+* New constructor signature.
+* Added option to specify region.
+* Updated dependencies.
+
 ## v 0.3.4 (October 10, 2014)
 * Fixed dependency badge.
 
