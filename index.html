@@ -29,18 +29,18 @@
       </header>
       <section>
         <h1>
-<a name="streaming-s3" class="anchor" href="#streaming-s3"><span class="octicon octicon-link"></span></a>Streaming-S3</h1>
+<a id="streaming-s3" class="anchor" href="#streaming-s3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Streaming-S3</h1>
 
 <p><a href="https://travis-ci.org/mindblaze/streaming-s3"><img src="https://travis-ci.org/mindblaze/streaming-s3.png?branch=master" alt="Build Status"></a>
-<a href="https://www.versioneye.com/user/projects/5323a411ec13758e7d000109"><img src="https://www.versioneye.com/user/projects/5323a411ec13758e7d000109/badge.png" alt="Dependency Status"></a>
-<a href="http://badge.fury.io/js/streaming-s3"><img src="https://badge.fury.io/js/streaming-s3.png" alt="NPM version"></a></p>
+<a href="https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005"><img src="https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005/badge.svg" alt="Dependency Status"></a>
+<a href="http://badge.fury.io/js/streaming-s3"><img src="https://badge.fury.io/js/streaming-s3.svg" alt="NPM version"></a></p>
 
 <p><a href="https://www.npmjs.org/package/streaming-s3"><img src="https://nodei.co/npm/streaming-s3.png?downloads=true" alt="NPM stats"></a></p>
 
 <p>A simple and light-weight S3 upload streaming module for NodeJS.</p>
 
 <h2>
-<a name="benefits--features" class="anchor" href="#benefits--features"><span class="octicon octicon-link"></span></a>Benefits &amp; Features</h2>
+<a id="benefits--features" class="anchor" href="#benefits--features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benefits &amp; Features</h2>
 
 <ul>
 <li>Super fast and super easy to use</li>
@@ -58,120 +58,134 @@
 </ul>
 
 <h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <pre><code>$ npm install streaming-s3
 </code></pre>
 
 <h2>
-<a name="example-usage" class="anchor" href="#example-usage"><span class="octicon octicon-link"></span></a>Example Usage</h2>
+<a id="version-04-and-03x-changes" class="anchor" href="#version-04-and-03x-changes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.4 and 0.3.x Changes</h2>
 
-<h3>
-<a name="example-1-uploading-local-file-with-callback" class="anchor" href="#example-1-uploading-local-file-with-callback"><span class="octicon octicon-link"></span></a>Example 1: Uploading local file with callback.</h3>
+<p>Starting from version 0.4 onwards you can pass in an object that is used to configure the underlying the aws-sdk. This can contain <strong>region</strong> and other parameters.</p>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">streamingS3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
-    <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+<ul>
+<li>Old Constructor (Still supported)</li>
+</ul>
 
-<span class="kd">var</span> <span class="nx">fStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">streamingS3</span><span class="p">(</span><span class="nx">fStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
-  <span class="p">{</span>
-    <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
-    <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span>
-    <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span>
-  <span class="p">},</span>  <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">,</span> <span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload error: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload stats: '</span><span class="p">,</span> <span class="nx">stats</span><span class="p">);</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload successful: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">);</span>
-</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-s">var</span> uploader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">streamingS3</span>(fStream, <span class="pl-s1"><span class="pl-pds">'</span>accessKey<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>secretKey<span class="pl-pds">'</span></span>, ...</pre></div>
 
-<h3>
-<a name="example-2-uploading-local-file-without-callback" class="anchor" href="#example-2-uploading-local-file-without-callback"><span class="octicon octicon-link"></span></a>Example 2: Uploading local file without callback.</h3>
+<ul>
+<li>New Constructor</li>
+</ul>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">streamingS3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
-    <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
-
-<span class="kd">var</span> <span class="nx">fStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">CreateReadStream</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/video.mp4'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">streamingS3</span><span class="p">(</span><span class="nx">fStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
-  <span class="p">{</span>
-    <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
-    <span class="nx">Key</span><span class="o">:</span> <span class="s1">'video.mp4'</span><span class="p">,</span>
-    <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'video/mp4'</span>
-  <span class="p">}</span>
-<span class="p">);</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">begin</span><span class="p">();</span> <span class="c1">// important if callback not provided.</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">bytesRead</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bytesRead</span><span class="p">,</span> <span class="s1">' bytes read.'</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'part'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Part '</span><span class="p">,</span> <span class="nx">number</span><span class="p">,</span> <span class="s1">' uploaded.'</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="c1">// All parts uploaded, but upload not yet acknowledged.</span>
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'uploaded'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload stats: '</span><span class="p">,</span> <span class="nx">stats</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">resp</span><span class="p">,</span> <span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload finished: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload error: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
-
-<h3>
-<a name="example-3-uploading-remote-file-without-callback-and-options" class="anchor" href="#example-3-uploading-remote-file-without-callback-and-options"><span class="octicon octicon-link"></span></a>Example 3: Uploading remote file without callback and options</h3>
-
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">streamingS3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'streaming-s3'</span><span class="p">),</span>
-    <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'request'</span><span class="p">);</span>
-
-<span class="kd">var</span> <span class="nx">rStream</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'http://www.google.com'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">streamingS3</span><span class="p">(</span><span class="nx">rStream</span><span class="p">,</span> <span class="s1">'accessKey'</span><span class="p">,</span> <span class="s1">'secretKey'</span><span class="p">,</span>
-  <span class="p">{</span>
-    <span class="nx">Bucket</span><span class="o">:</span> <span class="s1">'example.streaming-s3.com'</span><span class="p">,</span>
-    <span class="nx">Key</span><span class="o">:</span> <span class="s1">'google.html'</span><span class="p">,</span>
-    <span class="nx">ContentType</span><span class="o">:</span> <span class="s1">'text/html'</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="nx">concurrentParts</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="nx">waitTime</span><span class="o">:</span> <span class="mi">10000</span><span class="p">,</span>
-    <span class="nx">retries</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nx">maxPartSize</span><span class="o">:</span> <span class="mi">10</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">,</span>
-  <span class="p">}</span>
-<span class="p">);</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">begin</span><span class="p">();</span> <span class="c1">// important if callback not provided.</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">bytesRead</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bytesRead</span><span class="p">,</span> <span class="s1">' bytes read.'</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'part'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Part '</span><span class="p">,</span> <span class="nx">number</span><span class="p">,</span> <span class="s1">' uploaded.'</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="c1">// All parts uploaded, but upload not yet acknowledged.</span>
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'uploaded'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload stats: '</span><span class="p">,</span> <span class="nx">stats</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'finished'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">resp</span><span class="p">,</span> <span class="nx">stats</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload finished: '</span><span class="p">,</span> <span class="nx">resp</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="nx">uploader</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Upload error: '</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
-<span class="p">});</span>
-</pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-s">var</span> uploader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">streamingS3</span>(fStream, {accessKeyId<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>accessKey<span class="pl-pds">'</span></span>, secretAccessKey<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>secretKey<span class="pl-pds">'</span></span>}, ...</pre></div>
 
 <h2>
-<a name="defaults-and-configurables" class="anchor" href="#defaults-and-configurables"><span class="octicon octicon-link"></span></a>Defaults and Configurables</h2>
+<a id="example-usage" class="anchor" href="#example-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Usage</h2>
+
+<h3>
+<a id="example-1-uploading-local-file-with-callback" class="anchor" href="#example-1-uploading-local-file-with-callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example 1: Uploading local file with callback.</h3>
+
+<div class="highlight highlight-js"><pre><span class="pl-s">var</span> streamingS3 <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>streaming-s3<span class="pl-pds">'</span></span>),
+    fs <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
+
+<span class="pl-s">var</span> fStream <span class="pl-k">=</span> fs.CreateReadStream(<span class="pl-sv">__dirname</span> <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>/video.mp4<span class="pl-pds">'</span></span>);
+<span class="pl-s">var</span> uploader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">streamingS3</span>(fStream, {accessKeyId<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>accessKey<span class="pl-pds">'</span></span>, secretAccessKey<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>secretKey<span class="pl-pds">'</span></span>},
+  {
+    Bucket<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>example.streaming-s3.com<span class="pl-pds">'</span></span>,
+    Key<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>video.mp4<span class="pl-pds">'</span></span>,
+    ContentType<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>video/mp4<span class="pl-pds">'</span></span>
+  },  <span class="pl-st">function</span> (<span class="pl-vpf">err</span>, <span class="pl-vpf">resp</span>, <span class="pl-vpf">stats</span>) {
+  <span class="pl-k">if</span> (err) <span class="pl-k">return</span> <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload error: <span class="pl-pds">'</span></span>, e);
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload stats: <span class="pl-pds">'</span></span>, stats);
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload successful: <span class="pl-pds">'</span></span>, resp);
+  }
+);</pre></div>
+
+<h3>
+<a id="example-2-uploading-local-file-without-callback" class="anchor" href="#example-2-uploading-local-file-without-callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example 2: Uploading local file without callback.</h3>
+
+<div class="highlight highlight-js"><pre><span class="pl-s">var</span> streamingS3 <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>streaming-s3<span class="pl-pds">'</span></span>),
+    fs <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
+
+<span class="pl-s">var</span> fStream <span class="pl-k">=</span> fs.CreateReadStream(<span class="pl-sv">__dirname</span> <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>/video.mp4<span class="pl-pds">'</span></span>);
+<span class="pl-s">var</span> uploader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">streamingS3</span>(fStream, {accessKeyId<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>accessKey<span class="pl-pds">'</span></span>, secretAccessKey<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>secretKey<span class="pl-pds">'</span></span>},
+  {
+    Bucket<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>example.streaming-s3.com<span class="pl-pds">'</span></span>,
+    Key<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>video.mp4<span class="pl-pds">'</span></span>,
+    ContentType<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>video/mp4<span class="pl-pds">'</span></span>
+  }
+);
+
+uploader.begin(); <span class="pl-c">// important if callback not provided.</span>
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>data<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">bytesRead</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(bytesRead, <span class="pl-s1"><span class="pl-pds">'</span> bytes read.<span class="pl-pds">'</span></span>);
+});
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>part<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">number</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Part <span class="pl-pds">'</span></span>, number, <span class="pl-s1"><span class="pl-pds">'</span> uploaded.<span class="pl-pds">'</span></span>);
+});
+
+<span class="pl-c">// All parts uploaded, but upload not yet acknowledged.</span>
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>uploaded<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">stats</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload stats: <span class="pl-pds">'</span></span>, stats);
+});
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>finished<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">resp</span>, <span class="pl-vpf">stats</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload finished: <span class="pl-pds">'</span></span>, resp);
+});
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">e</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload error: <span class="pl-pds">'</span></span>, e);
+});</pre></div>
+
+<h3>
+<a id="example-3-uploading-remote-file-without-callback-and-options" class="anchor" href="#example-3-uploading-remote-file-without-callback-and-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example 3: Uploading remote file without callback and options</h3>
+
+<div class="highlight highlight-js"><pre><span class="pl-s">var</span> streamingS3 <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>streaming-s3<span class="pl-pds">'</span></span>),
+    request <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>request<span class="pl-pds">'</span></span>);
+
+<span class="pl-s">var</span> rStream <span class="pl-k">=</span> request.get(<span class="pl-s1"><span class="pl-pds">'</span>http://www.google.com<span class="pl-pds">'</span></span>);
+<span class="pl-s">var</span> uploader <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">streamingS3</span>(rStream, {accessKeyId<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>accessKey<span class="pl-pds">'</span></span>, secretAccessKey<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>secretKey<span class="pl-pds">'</span></span>},
+  {
+    Bucket<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>example.streaming-s3.com<span class="pl-pds">'</span></span>,
+    Key<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>google.html<span class="pl-pds">'</span></span>,
+    ContentType<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>text/html<span class="pl-pds">'</span></span>
+  },
+  {
+    concurrentParts<span class="pl-k">:</span> <span class="pl-c1">2</span>,
+    waitTime<span class="pl-k">:</span> <span class="pl-c1">10000</span>,
+    retries<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+    maxPartSize<span class="pl-k">:</span> <span class="pl-c1">10</span><span class="pl-k">*</span><span class="pl-c1">1024</span><span class="pl-k">*</span><span class="pl-c1">1024</span>,
+  }
+);
+
+uploader.begin(); <span class="pl-c">// important if callback not provided.</span>
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>data<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">bytesRead</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(bytesRead, <span class="pl-s1"><span class="pl-pds">'</span> bytes read.<span class="pl-pds">'</span></span>);
+});
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>part<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">number</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Part <span class="pl-pds">'</span></span>, number, <span class="pl-s1"><span class="pl-pds">'</span> uploaded.<span class="pl-pds">'</span></span>);
+});
+
+<span class="pl-c">// All parts uploaded, but upload not yet acknowledged.</span>
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>uploaded<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">stats</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload stats: <span class="pl-pds">'</span></span>, stats);
+});
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>finished<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">resp</span>, <span class="pl-vpf">stats</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload finished: <span class="pl-pds">'</span></span>, resp);
+});
+
+uploader.on(<span class="pl-s1"><span class="pl-pds">'</span>error<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">e</span>) {
+  <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>Upload error: <span class="pl-pds">'</span></span>, e);
+});</pre></div>
+
+<h2>
+<a id="defaults-and-configurables" class="anchor" href="#defaults-and-configurables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defaults and Configurables</h2>
 
 <ul>
 <li>
@@ -185,7 +199,7 @@
 </ul>
 
 <h2>
-<a name="statistics-object" class="anchor" href="#statistics-object"><span class="octicon octicon-link"></span></a>Statistics object</h2>
+<a id="statistics-object" class="anchor" href="#statistics-object" aria-hidden="true"><span class="octicon octicon-link"></span></a>Statistics object</h2>
 
 <ul>
 <li>
@@ -201,11 +215,13 @@
 </ul>
 
 <h2>
-<a name="history" class="anchor" href="#history"><span class="octicon octicon-link"></span></a>History</h2>
+<a id="history" class="anchor" href="#history" aria-hidden="true"><span class="octicon octicon-link"></span></a>History</h2>
 
 <ul>
-<li>v0.3.3 (2014-10-21) -- Upgraded AWS SDK to new stable version (2.0.21) and fixed Readme Examples.</li>
-<li>v0.3.2 (2014-06-01) -- Fixed Readme and version bump, to remove confusion.</li>
+<li>v0.4.0 (2014-11-28) -- New constructor signature, added option to specify region and updated dependencies.</li>
+<li>v0.3.4 (2014-10-10) -- Fixed dependencies badge.</li>
+<li>v0.3.3 (2014-10-10) -- Upgraded AWS SDK to latest stable version (2.0.21).</li>
+<li>v0.3.2 (2014-06-09) -- Fixed Readme and version bump, to remove confusion.</li>
 <li>v0.3.1-1 (2014-06-01) -- Updated dependencies.</li>
 <li>v0.3.1 (2014-06-01) -- Fixed stats object.</li>
 <li>v0.3.0 (2014-05-08) -- Downgraded AWS SDK to stable version (1.18)</li>
@@ -224,7 +240,7 @@
 </ul>
 
 <h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>The MIT License (MIT)</p>
 
