@@ -32,7 +32,7 @@ $ npm install streaming-s3
 
 
 ## Version 0.4 and 0.3.x Changes
-Starting from version 0.4 onwards you can pass in an object that is used to configure the underlying the aws-sdk. This can contain **region** and other parameters.
+Starting from version 0.4 onwards you can pass in an object that is used to configure the underlying aws-sdk. This can contain **region** and other parameters.
 
 * Old Constructor (Still supported)
 ```js
@@ -172,6 +172,7 @@ uploader.on('error', function (e) {
 
 ## History
 
+* v0.4.1 (2015-09-15) -- Updated dependencies.
 * v0.4.0 (2014-11-28) -- New constructor signature, added option to specify region and updated dependencies.
 * v0.3.4 (2014-10-10) -- Fixed dependencies badge.
 * v0.3.3 (2014-10-10) -- Upgraded AWS SDK to latest stable version (2.0.21).
@@ -197,7 +198,7 @@ uploader.on('error', function (e) {
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Talha Asad
+Copyright (c) 2015 Talha Asad
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

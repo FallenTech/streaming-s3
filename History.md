@@ -1,5 +1,9 @@
 # History
 
+## v 0.4.1 (September 15, 2015)
+* Fixed typos in readme.
+* Updated dependencies.
+
 ## v 0.4.0 (November 28, 2014)
 * New constructor signature.
 * Added option to specify region.
