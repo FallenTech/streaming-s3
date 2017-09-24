@@ -1,0 +1,8 @@
+title: Streaming-S3
+description: Streaming uploads to Amazon Web Service(AWS) S3 for NodeJS
+google_analytics: UA-49019483-1
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
