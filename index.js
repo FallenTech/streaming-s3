@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter,
     aws = require('aws-sdk');
 
 
-function extendObj (a, b) {
+function extendObj(a, b) {
   for (var x in b) a[x] = b[x];
   return a;
 }
@@ -14,7 +14,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   var self = this;
   
   // Lets hook our error event in the start so we can easily emit errors.
-  this.on('error', function (e) {
+  this.on('error', function(e) {
     if (self.failed || self.finished) return;
     self.waitingTimer && clearTimeout(self.waitingTimer);
     self.acknowledgeTimer && clearTimeout(self.acknowledgeTimer);
@@ -31,20 +31,17 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
     
     if (self.uploadId) {
       var abortMultipartUploadParams = extendObj({UploadId: self.uploadId}, self.s3ObjectParams);
-      self.s3Client.abortMultipartUpload(abortMultipartUploadParams, function (err, data) {
+      self.s3Client.abortMultipartUpload(abortMultipartUploadParams, function(err, data) {
         if (err) {
           self.cb && self.cb(err); // We can't do anything if aborting fails :'(
-          // prevent any further callbacks
           self.cb = null;
           return;
         }
         self.cb && self.cb(e);
-        // prevent any further callbacks
         self.cb = null;
       });
     } else {
       self.cb && self.cb(e);
-      // prevent any further callbacks
       self.cb = null;
     }
   });
@@ -67,11 +64,11 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   }
   
   var defaultOptions = {
-     concurrentParts: 5,        // Concurrent parts that will be uploaded to s3 (if read stream is fast enough)
-     waitTime: 60000,           // In seconds (Only applies once all parts are uploaded, used for acknowledgement), 0 = Unlimited
-     retries: 5,                // Number of times to retry a part.
-     sdkRetries: 6,             // Passed onto the underlying aws-sdk.
-     maxPartSize: 5*1024*1024  // In bytes, will also consume this much buffering memory.
+    concurrentParts: 5, // Concurrent parts that will be uploaded to s3 (if read stream is fast enough)
+    waitTime: 60000, // In seconds (Only applies once all parts are uploaded, used for acknowledgement), 0 = Unlimited
+    retries: 5, // Number of times to retry a part.
+    sdkRetries: 6, // Passed onto the underlying aws-sdk.
+    maxPartSize: 5 * 1024 * 1024 // In bytes, will also consume this much buffering memory.
   };
   
   options = extendObj(defaultOptions, options);
@@ -142,11 +139,11 @@ StreamingS3.prototype.begin = function() {
   
   var self = this;
   
-  this.streamErrorHandler = function (err) {
+  this.streamErrorHandler = function(err) {
     self.emit('error', err);
   };
   
-  this.streamDataHandler = function (chunk) {
+  this.streamDataHandler = function(chunk) {
     self.reading = true;
     if (!self.downloadStart) self.downloadStart = Date.now();
     if (typeof chunk === 'string') chunk = new Buffer(chunk, 'utf-8');
@@ -158,70 +155,71 @@ StreamingS3.prototype.begin = function() {
     }
   };
   
-  this.streamEndHandler = function () {
+  this.streamEndHandler = function() {
     self.reading = false;
     if (self.downloadStart) {
-      self.stats.downloadTime = Math.round((Date.now() - self.downloadStart)/1000, 3);
-      self.stats.downloadSpeed = Math.round(self.totalBytes/(self.stats.downloadTime/1000), 2);
+      self.stats.downloadTime = Math.round((Date.now() - self.downloadStart) / 1000, 3);
+      self.stats.downloadSpeed = Math.round(self.totalBytes / (self.stats.downloadTime / 1000), 2);
     }
     self.flushChunk();
   };
     
-  async.series({
-    createMultipartUpload: function (callback) {
-      var createMultipartUploadParams = extendObj(self.s3Params, self.s3ObjectParams);
-      self.s3Client.createMultipartUpload(createMultipartUploadParams, function (err, data) {
-        if (err) return self.emit('error', err);
+  async.series(
+    {
+      createMultipartUpload: function(callback) {
+        var createMultipartUploadParams = extendObj(self.s3Params, self.s3ObjectParams);
+        self.s3Client.createMultipartUpload(createMultipartUploadParams, function(err, data) {
+          if (err) return self.emit('error', err);
+          
+          // Assert UploadId presence.
+          if (!data.UploadId) return callback(new Error('AWS SDK returned invalid object! Expecting UploadId.'));
         
-        // Assert UploadId presence.
-        if (!data.UploadId) return callback(new Error('AWS SDK returned invalid object! Expecting UploadId.'));
-      
-        self.uploadId = data.UploadId;
-        callback();
-      });
-    }}, function (err, results) {
+          self.uploadId = data.UploadId;
+          callback();
+        });
+      }
+    }, function(err, results) {
       if (err) return self.emit('error', err);
       self.initiated = true;
       self.stream.on('error', self.streamErrorHandler);
       self.stream.on('data', self.streamDataHandler);
       self.stream.on('end', self.streamEndHandler);
       self.stream.resume();
-    }); 
-  
+    });
 };
 
 StreamingS3.prototype.flushChunk = function() {
   if (!this.initiated || !this.uploadId) return;
   var newChunk;
-    if (this.buffer.length > this.options.maxPartSize) {
-      newChunk = this.buffer.slice(0, this.options.maxPartSize);
-      this.buffer = new Buffer(this.buffer.slice(this.options.maxPartSize));
-    } else {
-      newChunk = this.buffer.slice(0, this.options.maxPartSize);
-      this.buffer = new Buffer(0);
-    }
+  if (this.buffer.length > this.options.maxPartSize) {
+    newChunk = this.buffer.slice(0, this.options.maxPartSize);
+    this.buffer = new Buffer(this.buffer.slice(this.options.maxPartSize));
+  } else {
+    newChunk = this.buffer.slice(0, this.options.maxPartSize);
+    this.buffer = new Buffer(0);
+  }
     
-    // Add useful properties to each chunk.
+  // Add useful properties to each chunk.
+  newChunk.uploading = false;
+  newChunk.finished = false;
+  newChunk.number = ++this.chunkNumber;
+  newChunk.retries = 0;
+  this.chunks.push(newChunk);
+  this.totalChunks++;
+    
+  // Edge case
+  if (this.reading === false && this.buffer.length) {
+    newChunk = this.buffer.slice(0, this.buffer.length);
+    this.buffer = null;
     newChunk.uploading = false;
     newChunk.finished = false;
     newChunk.number = ++this.chunkNumber;
     newChunk.retries = 0;
     this.chunks.push(newChunk);
     this.totalChunks++;
+  }
     
-    // Edge case
-    if (this.reading === false && this.buffer.length) {
-      newChunk = this.buffer.slice(0, this.buffer.length);
-      this.buffer = null;
-      newChunk.uploading = false;
-      newChunk.finished = false;
-      newChunk.number = ++this.chunkNumber;
-      newChunk.retries = 0;
-      this.chunks.push(newChunk);
-      this.totalChunks++;
-    }
-    
-    this.sendToS3();
+  this.sendToS3();
 };
 
 
@@ -244,9 +242,9 @@ StreamingS3.prototype.sendToS3 = function() {
     };
     
     partS3Params = extendObj(partS3Params, self.s3ObjectParams);
-    chunk.client.uploadPart(partS3Params, function (err, data) {
+    chunk.client.uploadPart(partS3Params, function(err, data) {
       if (err) {
-        if (err.code == 'RequestTimeout') {
+        if (err.code === 'RequestTimeout') {
           if (chunk.retries >= self.options.retries) return next(err);
           else {
             chunk.uploading = false;
@@ -260,6 +258,7 @@ StreamingS3.prototype.sendToS3 = function() {
       } else {
         // Assert ETag presence.
         if (!data.ETag) return next(new Error('AWS SDK returned invalid object when part uploaded! Expecting Etag.'));
+        
         // chunk.number starts at 1, while array starts at 0.
         self.uploadedChunks[chunk.number] = data.ETag;
         chunk.finished = true;
@@ -271,24 +270,24 @@ StreamingS3.prototype.sendToS3 = function() {
   }
   
   // Remove finished chunks, save memory :)
-  this.chunks = this.chunks.filter(function (chunk) {
+  this.chunks = this.chunks.filter(function(chunk) {
     return chunk.finished === false;
   });
   
   if (this.chunks.length) {
     
-    async.eachLimit(this.chunks, this.options.concurrentParts, uploadChunk, function (err) {
+    async.eachLimit(this.chunks, this.options.concurrentParts, uploadChunk, function(err) {
       if (err) return self.emit('error', err);
       
       // Remove finished chunks, save memory :)
-      self.chunks = self.chunks.filter(function (chunk) {
+      self.chunks = self.chunks.filter(function(chunk) {
         return chunk.finished === false;
       });
       
-      if (self.chunks.length === 0 && !self.waiting && !self.reading && self.totalChunks == Object.keys(self.uploadedChunks).length) {
+      if (self.chunks.length === 0 && !self.waiting && !self.reading && self.totalChunks === Object.keys(self.uploadedChunks).length) {
         if (self.uploadStart) {
-          self.stats.uploadTime = Math.round((Date.now() - self.uploadStart)/1000, 3);
-          self.stats.uploadSpeed = Math.round(self.totalBytes/(self.stats.uploadTime/1000), 2);
+          self.stats.uploadTime = Math.round((Date.now() - self.uploadStart) / 1000, 3);
+          self.stats.uploadSpeed = Math.round(self.totalBytes / (self.stats.uploadTime / 1000), 2);
         }
         self.stats.size = self.totalBytes;
         self.emit('uploaded', self.stats);
@@ -315,14 +314,14 @@ StreamingS3.prototype.finish = function() {
   var self = this;
   
   var listPartsParams = extendObj({UploadId: this.uploadId, MaxParts: this.totalChunks}, this.s3ObjectParams);
-  this.s3Client.listParts(listPartsParams, function (err, data) {
+  this.s3Client.listParts(listPartsParams, function(err, data) {
     if (err) return self.emit('error', err);
     
     if (!self.acknowledgeTimer) self.acknowledgeTimer = setTimeout(function() { self.finish(); }, 1000);
     
     // Assert Parts presence.
     if (!data.Parts) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting Parts.'));
-    if (data.Parts.length != self.totalChunks) return;
+    if (data.Parts.length !== self.totalChunks) return;
     
     // S3 has all parts Lets send ETags.
     var completeMultipartUploadParams = {
@@ -337,8 +336,9 @@ StreamingS3.prototype.finish = function() {
     }
     
     completeMultipartUploadParams = extendObj(completeMultipartUploadParams, self.s3ObjectParams);
-    self.s3Client.completeMultipartUpload(completeMultipartUploadParams, function (err, data) {
+    self.s3Client.completeMultipartUpload(completeMultipartUploadParams, function(err, data) {
       if (err) return self.emit('error', err);
+      
       // Assert File ETag presence.
       if (!data.ETag) return self.emit('error', new Error('AWS SDK returned invalid object! Expecting file Etag.'));
       self.waitingTimer && clearTimeout(self.waitingTimer);
@@ -357,9 +357,9 @@ StreamingS3.prototype.finish = function() {
     
   // Make sure we don't keep checking for parts forever.
   if (!this.waitingTimer && this.options.waitTime) {
-    this.waitingTimer = setTimeout(function () {
+    this.waitingTimer = setTimeout(function() {
       if (self.waiting && !self.finished) {
-        return self.emit('error', new Error('AWS did not acknowledge all parts within specified timeout of ' + (self.options.waitTime/1000) + ' seconds.'));
+        return self.emit('error', new Error('AWS did not acknowledge all parts within specified timeout of ' + (self.options.waitTime / 1000) + ' seconds.'));
       }
     }, self.options.waitTime);
   }

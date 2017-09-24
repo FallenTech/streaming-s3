@@ -3,6 +3,7 @@
 ## v 0.4.2 (September 25, 2017)
 * Fixed examples.
 * Updated dependencies.
+* Code indentation fixes.
 
 ## v 0.4.1 (September 15, 2015)
 * Fixed typos in readme.
