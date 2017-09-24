@@ -1,7 +1,7 @@
 # Streaming-S3
 
-[![Build Status](https://travis-ci.org/mindblaze/streaming-s3.png?branch=master)](https://travis-ci.org/mindblaze/streaming-s3)
-[![Dependency Status](https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005/badge.svg)](https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005)
+[![Build Status](https://travis-ci.org/FallenTech/streaming-s3.png?branch=master)](https://travis-ci.org/FallenTech/streaming-s3)
+[![Dependency Status](https://www.versioneye.com/user/projects/59c83eee2de28c00382c935a/badge.svg)](https://www.versioneye.com/user/projects/59c83eee2de28c00382c935a)
 [![NPM version](https://badge.fury.io/js/streaming-s3.svg)](http://badge.fury.io/js/streaming-s3)
 
 [![NPM stats](https://nodei.co/npm/streaming-s3.png?downloads=true)](https://www.npmjs.org/package/streaming-s3)
@@ -32,7 +32,7 @@ $ npm install streaming-s3
 
 
 ## Version 0.4 and 0.3.x Changes
-Starting from version 0.4 onwards you can pass in an object that is used to configure the underlying the aws-sdk. This can contain **region** and other parameters.
+Starting from version 0.4 onwards you can pass in an object that is used to configure the underlying aws-sdk. This can contain **region** and other parameters.
 
 * Old Constructor (Still supported)
 ```js
@@ -54,14 +54,14 @@ var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessK
 var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
-var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
+var fStream = fs.createReadStream(__dirname + '/video.mp4');
 var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
     ContentType: 'video/mp4'
-  },  function (err, resp, stats) {
-  if (err) return console.log('Upload error: ', e);
+  },  function (e, resp, stats) {
+  if (e) return console.log('Upload error: ', e);
   console.log('Upload stats: ', stats);
   console.log('Upload successful: ', resp);
   }
@@ -74,7 +74,7 @@ var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessK
 var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
-var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
+var fStream = fs.createReadStream(__dirname + '/video.mp4');
 var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
@@ -125,7 +125,7 @@ var uploader = new streamingS3(rStream, {accessKeyId: 'accessKey', secretAccessK
     concurrentParts: 2,
     waitTime: 10000,
     retries: 1,
-    maxPartSize: 10*1024*1024,
+    maxPartSize: 10*1024*1024
   }
 );
   
@@ -156,9 +156,9 @@ uploader.on('error', function (e) {
 ## Defaults and Configurables
 
 * **concurrentParts** (Default: 5) - Parts that are uploaded simultaneously.
-* **waitTime** (Default: 1 min (60000 ms)) - Time to wait for verification from S3 after uploading parts.
+* **waitTime** (Default: 1 Min) - Time to wait for acknowledgement from S3 after uploading a part in ms, use 0 for forever.
 * **retries** (Default: 5) - Number of times to retry uploading a part, before failing.
-* **maxPartSize** (Default: 5 MB) - Maximum size of each part.
+* **maxPartSize** (Default: 5 MB) - Maximum size of each part in bytes.
 
 
 ## Statistics object
@@ -170,34 +170,11 @@ uploader.on('error', function (e) {
 * **size** - Total bytes uploaded.
 
 
-## History
-
-* v0.4.0 (2014-11-28) -- New constructor signature, added option to specify region and updated dependencies.
-* v0.3.4 (2014-10-10) -- Fixed dependencies badge.
-* v0.3.3 (2014-10-10) -- Upgraded AWS SDK to latest stable version (2.0.21).
-* v0.3.2 (2014-06-09) -- Fixed Readme and version bump, to remove confusion.
-* v0.3.1-1 (2014-06-01) -- Updated dependencies.
-* v0.3.1 (2014-06-01) -- Fixed stats object.
-* v0.3.0 (2014-05-08) -- Downgraded AWS SDK to stable version (1.18)
-* v0.2.9 (2014-05-07) -- some minor improvements.
-* v0.2.8 (2014-04-07) -- added size property to stats object.
-* v0.2.7 (2014-03-27) -- Critical interval issues addressed.
-* v0.2.6 (2014-03-27) -- Various minor improvements.
-* v0.2.4 (2014-03-26) -- Various minor improvements.
-* v0.2.3 (2014-03-24) -- Options overwriting bug resolved.
-* v0.2.2 (2014-03-24) -- Added some useful keywords to the package.
-* v0.2.1 (2014-03-24) -- Prevent callback being fired twice in case of failure.
-* v0.2.0 (2014-03-22) -- Updated dependencies.
-* v0.1.9 (2014-03-21) -- acknowledgement logic improved.
-* v0.1.8 (2014-03-21) -- Closes #1 and lots of fixes.
-* v0.1.7 (2014-03-15) -- Initial release.
-
-
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Talha Asad
+Copyright (c) 2014 - 2017 Talha Asad
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
