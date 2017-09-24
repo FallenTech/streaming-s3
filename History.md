@@ -1,5 +1,9 @@
 # History
 
+## v 0.4.3 (September 25, 2017)
+* URL Fixed.
+* Fixed examples indentation.
+
 ## v 0.4.2 (September 25, 2017)
 * Fixed examples.
 * Updated dependencies.

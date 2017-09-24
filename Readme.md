@@ -82,29 +82,29 @@ var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessK
     ContentType: 'video/mp4'
   }
 );
-  
-uploader.begin(); // important if callback not provided.
 
-uploader.on('data', function (bytesRead) {
+uploader.on('data', function(bytesRead) {
   console.log(bytesRead, ' bytes read.');
 });
 
-uploader.on('part', function (number) {
+uploader.on('part', function(number) {
   console.log('Part ', number, ' uploaded.');
 });
 
 // All parts uploaded, but upload not yet acknowledged.
-uploader.on('uploaded', function (stats) {
+uploader.on('uploaded', function(stats) {
   console.log('Upload stats: ', stats);
 });
 
-uploader.on('finished', function (resp, stats) {
+uploader.on('finished', function(resp, stats) {
   console.log('Upload finished: ', resp);
 });
 
-uploader.on('error', function (e) {
+uploader.on('error', function(e) {
   console.log('Upload error: ', e);
 });
+
+uploader.begin(); // important if callback not provided.
 ```
 
 
@@ -125,32 +125,32 @@ var uploader = new streamingS3(rStream, {accessKeyId: 'accessKey', secretAccessK
     concurrentParts: 2,
     waitTime: 10000,
     retries: 1,
-    maxPartSize: 10*1024*1024
+    maxPartSize: 10 * 1024 * 1024
   }
 );
-  
-uploader.begin(); // important if callback not provided.
 
-uploader.on('data', function (bytesRead) {
+uploader.on('data', function(bytesRead) {
   console.log(bytesRead, ' bytes read.');
 });
 
-uploader.on('part', function (number) {
+uploader.on('part', function(number) {
   console.log('Part ', number, ' uploaded.');
 });
 
 // All parts uploaded, but upload not yet acknowledged.
-uploader.on('uploaded', function (stats) {
+uploader.on('uploaded', function(stats) {
   console.log('Upload stats: ', stats);
 });
 
-uploader.on('finished', function (resp, stats) {
+uploader.on('finished', function(resp, stats) {
   console.log('Upload finished: ', resp);
 });
 
-uploader.on('error', function (e) {
+uploader.on('error', function(e) {
   console.log('Upload error: ', e);
 });
+
+uploader.begin(); // important if callback not provided.
 ```
 
 ## Defaults and Configurables
