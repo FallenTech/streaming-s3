@@ -54,14 +54,14 @@ var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessK
 var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
-var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
+var fStream = fs.createReadStream(__dirname + '/video.mp4');
 var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
     Key: 'video.mp4',
     ContentType: 'video/mp4'
-  },  function (err, resp, stats) {
-  if (err) return console.log('Upload error: ', e);
+  },  function (e, resp, stats) {
+  if (e) return console.log('Upload error: ', e);
   console.log('Upload stats: ', stats);
   console.log('Upload successful: ', resp);
   }
@@ -74,7 +74,7 @@ var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessK
 var streamingS3 = require('streaming-s3'),
     fs = require('fs');
 
-var fStream = fs.CreateReadStream(__dirname + '/video.mp4');
+var fStream = fs.createReadStream(__dirname + '/video.mp4');
 var uploader = new streamingS3(fStream, {accessKeyId: 'accessKey', secretAccessKey: 'secretKey'},
   {
     Bucket: 'example.streaming-s3.com',
@@ -125,7 +125,7 @@ var uploader = new streamingS3(rStream, {accessKeyId: 'accessKey', secretAccessK
     concurrentParts: 2,
     waitTime: 10000,
     retries: 1,
-    maxPartSize: 10*1024*1024,
+    maxPartSize: 10*1024*1024
   }
 );
   
@@ -198,7 +198,7 @@ uploader.on('error', function (e) {
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Talha Asad
+Copyright (c) 2014 - 2017 Talha Asad
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
