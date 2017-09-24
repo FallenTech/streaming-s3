@@ -1,7 +1,7 @@
 # Streaming-S3
 
-[![Build Status](https://travis-ci.org/mindblaze/streaming-s3.png?branch=master)](https://travis-ci.org/mindblaze/streaming-s3)
-[![Dependency Status](https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005/badge.svg)](https://www.versioneye.com/user/projects/5445ece1e5a8f0ccb2000005)
+[![Build Status](https://travis-ci.org/FallenTech/streaming-s3.png?branch=master)](https://travis-ci.org/FallenTech/streaming-s3)
+[![Dependency Status](https://www.versioneye.com/user/projects/59c83eee2de28c00382c935a/badge.svg)](https://www.versioneye.com/user/projects/59c83eee2de28c00382c935a)
 [![NPM version](https://badge.fury.io/js/streaming-s3.svg)](http://badge.fury.io/js/streaming-s3)
 
 [![NPM stats](https://nodei.co/npm/streaming-s3.png?downloads=true)](https://www.npmjs.org/package/streaming-s3)

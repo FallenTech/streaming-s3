@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "async": "2.5.0",
-    "aws-sdk": "2.121.0",
+    "aws-sdk": "2.122.0",
     "request": "^2.82.0"
   }
 }
