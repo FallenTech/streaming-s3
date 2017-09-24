@@ -156,9 +156,9 @@ uploader.on('error', function (e) {
 ## Defaults and Configurables
 
 * **concurrentParts** (Default: 5) - Parts that are uploaded simultaneously.
-* **waitTime** (Default: 1 min (60000 ms)) - Time to wait for verification from S3 after uploading parts.
+* **waitTime** (Default: 1 Min) - Time to wait for acknowledgement from S3 after uploading a part in ms, use 0 for forever.
 * **retries** (Default: 5) - Number of times to retry uploading a part, before failing.
-* **maxPartSize** (Default: 5 MB) - Maximum size of each part.
+* **maxPartSize** (Default: 5 MB) - Maximum size of each part in bytes.
 
 
 ## Statistics object
@@ -168,30 +168,6 @@ uploader.on('error', function (e) {
 * **uploadTime** - Upload time in seconds.
 * **uploadSpeed** - Upload speed in bytes/second. (Streaming to S3)
 * **size** - Total bytes uploaded.
-
-
-## History
-
-* v0.4.1 (2015-09-15) -- Updated dependencies.
-* v0.4.0 (2014-11-28) -- New constructor signature, added option to specify region and updated dependencies.
-* v0.3.4 (2014-10-10) -- Fixed dependencies badge.
-* v0.3.3 (2014-10-10) -- Upgraded AWS SDK to latest stable version (2.0.21).
-* v0.3.2 (2014-06-09) -- Fixed Readme and version bump, to remove confusion.
-* v0.3.1-1 (2014-06-01) -- Updated dependencies.
-* v0.3.1 (2014-06-01) -- Fixed stats object.
-* v0.3.0 (2014-05-08) -- Downgraded AWS SDK to stable version (1.18)
-* v0.2.9 (2014-05-07) -- some minor improvements.
-* v0.2.8 (2014-04-07) -- added size property to stats object.
-* v0.2.7 (2014-03-27) -- Critical interval issues addressed.
-* v0.2.6 (2014-03-27) -- Various minor improvements.
-* v0.2.4 (2014-03-26) -- Various minor improvements.
-* v0.2.3 (2014-03-24) -- Options overwriting bug resolved.
-* v0.2.2 (2014-03-24) -- Added some useful keywords to the package.
-* v0.2.1 (2014-03-24) -- Prevent callback being fired twice in case of failure.
-* v0.2.0 (2014-03-22) -- Updated dependencies.
-* v0.1.9 (2014-03-21) -- acknowledgement logic improved.
-* v0.1.8 (2014-03-21) -- Closes #1 and lots of fixes.
-* v0.1.7 (2014-03-15) -- Initial release.
 
 
 ## License

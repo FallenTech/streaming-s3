@@ -1,8 +1,8 @@
 {
   "author": {
     "name": "Talha Asad",
-    "email": "talha@mindblaze.net",
-    "url": "http://mindblaze.net"
+    "email": "talha@fallentech.com",
+    "url": "http://fallentech.com"
   },
   "name": "streaming-s3",
   "description": "Streaming uploads to Amazon Web Service (AWS) S3 for NodeJS",
@@ -19,10 +19,10 @@
     "streaming upload",
     "s3 streaming upload"
   ],
-  "homepage": "http://mindblaze.github.io/streaming-s3",
+  "homepage": "http://fallentech.github.io/streaming-s3",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mindblaze/streaming-s3.git"
+    "url": "git://github.com/fallentech/streaming-s3.git"
   },
   "main": "index.js",
   "engines": {
