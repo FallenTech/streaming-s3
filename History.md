@@ -1,5 +1,9 @@
 # History
 
+## v 0.4.4 (September 26, 2017)
+* Extraneous files removed from NPM package.
+* Improved package keywords and added license.
+
 ## v 0.4.3 (September 25, 2017)
 * URL Fixed.
 * Fixed examples indentation.
