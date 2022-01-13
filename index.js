@@ -103,7 +103,7 @@ function StreamingS3(stream, s3AccessKey, s3SecretKey, s3Params, options, cb) {
   this.totalBytes = 0;
   
   // Chunking and buffering
-  this.buffer = new Buffer(0);
+  this.buffer = Buffer.alloc(0);
   this.chunks = [];
   this.chunkNumber = 0;
   this.totalChunks = 0;
@@ -146,7 +146,7 @@ StreamingS3.prototype.begin = function() {
   this.streamDataHandler = function(chunk) {
     self.reading = true;
     if (!self.downloadStart) self.downloadStart = Date.now();
-    if (typeof chunk === 'string') chunk = new Buffer(chunk, 'utf-8');
+    if (typeof chunk === 'string') chunk = Buffer.from(chunk, 'utf-8');
     self.totalBytes += chunk.length;
     self.buffer = Buffer.concat([self.buffer, chunk]);
     self.emit('data', chunk.length);
@@ -193,10 +193,10 @@ StreamingS3.prototype.flushChunk = function() {
   var newChunk;
   if (this.buffer.length > this.options.maxPartSize) {
     newChunk = this.buffer.slice(0, this.options.maxPartSize);
-    this.buffer = new Buffer(this.buffer.slice(this.options.maxPartSize));
+    this.buffer = Buffer.from(this.buffer.slice(this.options.maxPartSize));
   } else {
     newChunk = this.buffer.slice(0, this.options.maxPartSize);
-    this.buffer = new Buffer(0);
+    this.buffer = Buffer.alloc(0);
   }
     
   // Add useful properties to each chunk.

@@ -1,5 +1,9 @@
 # History
 
+## v 0.4.5 (January 13, 2021)
+* Updated dependencies.
+* Fixed Buffer deprecation warnings.
+
 ## v 0.4.4 (September 26, 2017)
 * Extraneous files removed from NPM package.
 * Improved package keywords and added license.
