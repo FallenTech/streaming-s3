@@ -1,6 +1,6 @@
 # History
 
-## v 0.4.5 (January 13, 2021)
+## v 0.4.5 (January 13, 2022)
 * Updated dependencies.
 * Fixed Buffer deprecation warnings.
 
